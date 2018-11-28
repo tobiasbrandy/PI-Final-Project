@@ -8,22 +8,22 @@
 
 #define BLOCK 150
 
-typedef struct moveTypeS{
-	long int cabotaje;
-	long int internacional;
-}moveTypeS;
+typedef struct movement{
+	long int cabotage;
+	long int international;
+}tMovement;
 
 typedef struct moveComposition{
-	moveTypeS regular;
-	moveTypeS notRegular;
-	moveTypeS private;
+	tMovement regular;
+	tMovement notRegular;
+	tMovement private;
 }moveComposition;
 
 typedef struct date{
 	char day;
 	char month;
 	size_t year;
-}date;
+}tDate;
 
 typedef struct airportMini{
 	char * OACI;

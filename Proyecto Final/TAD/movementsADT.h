@@ -1,4 +1,4 @@
-#include "../main.h"
+#include "process.h"
 
 
 
@@ -10,7 +10,7 @@ void freeMovements(movementsADT movements);
 
 tClass * getMovsByWeekDay(movementsADT movements);
 
-moveComposition getMovsComposition(movementsADT movements);
+tComposition getMovsComposition(movementsADT movements);
 
 
 

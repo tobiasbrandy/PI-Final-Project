@@ -63,5 +63,35 @@ airportADT * airportToArray(airportADT airport, int * dim){
 	return rta;
 }
 
+static airportADT insertAirportByMovs(airportADT airport, airportADT rta){
+	if(rta == NULL || airport->movements > rta->movements){
+
+		airportADT aux = malloc(sizeof(airportCDT));
+		strcpy(aux->oaci, airport->oaci);
+		strcpy(aux->denomination, airport->denomination);
+		strcpy(aux->province, airport->province);
+		aux->movements = airport->movements;
+		aux->tail = rta;
+		return aux;
+	}
+	/* El paso inductivo tambien lo hago cuando airport->movements == rta->movements porque airport 
+	ya esta ordenado alfabeticamente por OACI, entonces si cuando son iguales dejo que este primero el de 
+	airport, me estoy garantizando que el orden secundario sea alfabetico.*/
+
+	rta->tail = insertAirportByMovs(airport, rta->tail);
+	return rta;
+}
+
+static airportADT cpyAirportByMovs(airportADT airport){  //Es static porque nuestro TAD no soporta que la lista este ordenada por movimiento.
+	airportADT rta = NULL;
+	airportADT aux = airport;
+	while(aux != NULL){
+		rta = insertAirportByMovs(aux, rta);
+		aux=aux->tail;
+	}
+	return rta;
+}
+
+
 
 

@@ -26,7 +26,7 @@ airportADT * airportToArray(airportADT airport, int * dim);
 * Crea una copia de la lista que está ordenada según la cantidad de movimientos de manera descendente y secundariamente
 * alfabéticamente por código OACI
 */
-//static airportADT sortByMovs(airportADT airport); NO TIENE QUE IR EN EL .H PORQUE ES STATIC.
+//static airportADT cpyAirportByMovs(airportADT airport); NO TIENE QUE IR EN EL .H PORQUE ES STATIC.
 
 /*
 * Almacena en un archivo de texto los aeropuertos junto con la cantidad de movimientos de manera descendente.

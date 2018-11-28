@@ -1,17 +1,23 @@
 #include "movementsADT.h"
 
 typedef struct movement{
-	date fecha;
-	flightClass claseVuelo;
-	moveType tipoMovimiento;
-	char * origenOACI;
+
+	tDate date;
+	flightClassEnum class; //REGULAR, NO REGULAR, PRIVADO
+	flightClasifEnum clasification; //CABOTAJE, INTERNACIONAL, NA
+	moveTypeEnum tipoMovimiento; //DESPEGUE, ATERRIZAJE
+	char * origOACI;
 	char * destOACI;
-	char * aerolinea;
-}movement;
+	char * airline;
+
+}tMovement;
+
 
 typedef struct movementsCDT{
-	movement movements[BLOCK];
+
+	tMovement movements[BLOCK];
 	size_t dim;
-	moveTypeS week[7];
-	moveComposition moveComp;
+	tClass week[7];
+	tComposition moveComp;
+
 }movementsCDT;

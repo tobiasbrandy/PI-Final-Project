@@ -11,7 +11,7 @@ int insertMovement(date fecha, flightClass claseVuelo, moveType tipoMovimiento, 
 
 void freeMovements(movementsADT movements);
 
-moveTypeS * getMovsByWeekDay(movementsADT movements);
+tClass * getMovsByWeekDay(movementsADT movements);
 
 moveComposition getMovsComposition(movementsADT movements);
 

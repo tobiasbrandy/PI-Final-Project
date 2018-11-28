@@ -10,7 +10,7 @@ typedef struct movement{
 }movement;
 
 typedef struct movementsCDT{
-	movement movements[BLOQUE];
+	movement movements[BLOCK];
 	size_t dim;
 	moveTypeS week[7];
 	moveComposition moveComp;

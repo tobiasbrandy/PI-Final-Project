@@ -7,20 +7,20 @@ airportADT createAirport();
 /*
 * Inserta un nuevo aeropuerto a la lista. Los ordena alfabéticamente según el código OACI.
 */
-airportADT insertAirport(char * oaci, char * denom, char * province);
+airportADT insertAirport(airportADT airport, char * oaci, char * denomination, char * province);
 
 void freeAirport(airportADT airport);
 
 /*
 * Crea un array de una estructura de aeropuertos reducidos, que solo tienen el OACI y la cantidad de movimientos.
 */
-airportMini * airportToArray(airportADT airport, int * dim);
+airportADT * airportToArray(airportADT airport, int * dim);
 
 /*
 * Recibe un array de estructuras de aeropuertos reducidos cuyo orden coincide con la lista y reemplaza los valores
 * de movimientos de la lista por los del array.
 */
-void updateMovsWithArray(airportMini * airportMini);
+//void updateMovsWithArray(airportMini * airportMini); CREO QUE NO HACE FALTA!
 
 /*
 * Crea una copia de la lista que está ordenada según la cantidad de movimientos de manera descendente y secundariamente

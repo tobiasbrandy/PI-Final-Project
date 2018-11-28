@@ -6,7 +6,8 @@
 #include "getnum.h"
 #include "random.h"
 
-#define BLOCK 150
+#define MBLOCK 150
+#define BLOCK 50
 
 typedef struct movementsCDT * movementsADT;
 typedef enum {REGULAR, NOREGULAR, PRIVADOMN, PRIVADOME} flightClassEnum;
@@ -30,11 +31,11 @@ typedef struct date{
 	size_t year;
 }tDate;
 
-typedef struct airportMini{ //PARA BUSQUEDA BINARIA
+/*typedef struct airportMini{ //Para la busqueda binaria. CREO QUE NO HACE FALTA!
 	char * oaci;
 	long int movements;
 }airportMini;
-
+*/
 
 
 //FUNCIONES QUE FALTAN. Nombres tentativos jajajaj.

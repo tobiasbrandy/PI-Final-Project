@@ -1,3 +1,5 @@
+#ifndef library_ok
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -6,6 +8,7 @@
 #include "getnum.h"
 #include "random.h"
 
+#define library_ok
 #define MBLOCK 150
 #define BLOCK 50
 
@@ -13,6 +16,13 @@ typedef struct movementsCDT * movementsADT;
 typedef enum {REGULAR, NOREGULAR, PRIVADOMN, PRIVADOME} flightClassEnum;
 typedef enum {CABOTAJE, INTERNACIONAL, NA} flightClasifEnum;
 typedef enum {DESPEGUE, ATERRIZAJE} moveTypeEnum; 
+
+typedef struct airport{
+	char * oaci;
+	char * denomination;
+	char * province;
+	long int movements;
+}tAirport;
 
 typedef struct flightClasification{
 	long int cabotage;
@@ -58,3 +68,4 @@ typedef struct date{
 //storeMovementByWeekday(); (Query 2)
 //storeMovementByComposition(); (Query 3)
 
+#endif

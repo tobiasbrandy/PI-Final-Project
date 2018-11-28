@@ -5,7 +5,7 @@ typedef struct movement{
 	tDate date;
 	flightClassEnum class; //REGULAR, NO REGULAR, PRIVADO
 	flightClasifEnum clasification; //CABOTAJE, INTERNACIONAL, NA
-	moveTypeEnum tipoMovimiento; //DESPEGUE, ATERRIZAJE
+	moveTypeEnum moveType; //DESPEGUE, ATERRIZAJE
 	char * origOACI;
 	char * destOACI;
 	char * airline;

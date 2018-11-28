@@ -1,4 +1,4 @@
-#include "../main.h"
+#include "process.h"
 
 typedef struct airportCDT * airportADT;
 

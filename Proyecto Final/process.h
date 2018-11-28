@@ -13,16 +13,16 @@ typedef enum {REGULAR, NOREGULAR, PRIVADOMN, PRIVADOME} flightClassEnum;
 typedef enum {CABOTAJE, INTERNACIONAL, NA} flightClasifEnum;
 typedef enum {DESPEGUE, ATERRIZAJE} moveTypeEnum; 
 
-typedef struct movement{
+typedef struct flightClasification{
 	long int cabotage;
 	long int international;
-}tMovement;
+}tClasification;
 
-typedef struct moveComposition{
-	tMovement regular;
-	tMovement notRegular;
-	tMovement private;
-}moveComposition;
+typedef struct flightClass{
+	tClasification regular;
+	tClasification notRegular;
+	tClasification private;
+}tComposition;
 
 typedef struct date{
 	char day;
@@ -30,9 +30,9 @@ typedef struct date{
 	size_t year;
 }tDate;
 
-typedef struct airportMini{
-	char * OACI;
-	long int movimientos;
+typedef struct airportMini{ //PARA BUSQUEDA BINARIA
+	char * oaci;
+	long int movements;
 }airportMini;
 
 

@@ -5,9 +5,9 @@ typedef struct airportCDT * airportADT;
 airportADT createAirport();
 
 /*
-* Inserta un nuevo aeropuerto a la lista. Los ordena de forma alfabetica segun el OACI.
+* Inserta un nuevo aeropuerto a la lista. Los ordena alfabéticamente segun el OACI.
 */
-airportADT insertAirport(char * OACI, char * denominacion, char * provincia);
+airportADT insertAirport(char * oaci, char * denom, char * province);
 
 void freeAirport(airportADT airport);
 

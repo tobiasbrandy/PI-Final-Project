@@ -7,7 +7,6 @@
 #include "random.h"
 
 #define BLOCK 150
-//QUERIA PROBAR GIT SORRY
 
 typedef struct movementsCDT * movementsADT;
 typedef enum {REGULAR, NOREGULAR, PRIVADOMN, PRIVADOME} flightClassEnum;

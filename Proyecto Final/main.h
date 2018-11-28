@@ -8,6 +8,11 @@
 
 #define BLOCK 150
 
+typedef struct movementsCDT * movementsADT;
+typedef enum {REGULAR, NOREGULAR, PRIVADOMN, PRIVADOME} flightClassEnum;
+typedef enum {CABOTAJE, INTERNACIONAL, NA} flightClasifEnum;
+typedef enum {DESPEGUE, ATERRIZAJE} moveTypeEnum; 
+
 typedef struct movement{
 	long int cabotage;
 	long int international;

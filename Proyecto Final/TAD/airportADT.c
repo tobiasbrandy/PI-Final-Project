@@ -1,11 +1,13 @@
 #include "airportADT.h"
 
 typedef struct airportCDT{
+
 	char * oaci;
-	char * denominacion;
-	char * provincia;
-	long int movimientos;
+	char * denomination;
+	char * province;
+	long int movements;
 	struct airportCDT * tail;
+
 }airportCDT;
 
 airportADT createAirport(){

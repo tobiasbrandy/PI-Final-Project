@@ -1,9 +1,6 @@
 #include "../main.h"
 
-typedef struct movementsCDT * movementsADT;
-typedef enum {REGULAR, NOREGULAR, PRIVADOMN, PRIVADOME} flightClass;
-typedef enum {CABOTAJE, INTERNACIONAL, NA} flightClasification;
-typedef enum {DESPEGUE, ATERRIZAJE} moveType; 
+
 
 movementsADT createMovements();
 

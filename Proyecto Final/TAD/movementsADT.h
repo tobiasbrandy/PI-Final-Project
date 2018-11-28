@@ -4,7 +4,7 @@
 
 movementsADT createMovements();
 
-int insertMovement(tDate date, flightClassEnum flightClass, moveTypeEnum tipoMovimiento, char * origOACI, char * destOACI, char * airline);
+int insertMovement(tDate date, flightClassEnum flightClass, moveTypeEnum moveType, char * origOACI, char * destOACI, char * airline);
 
 void freeMovements(movementsADT movements);
 

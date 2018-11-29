@@ -17,12 +17,6 @@ void freeAirport(airportADT ap);
 tAirport ** airportToArray(airportADT ap, int * dim);
 
 /*
-* Recibe un array de estructuras de aeropuertos reducidos cuyo orden coincide con la lista y reemplaza los valores
-* de movimientos de la lista por los del array.
-*/
-//void updateMovsWithArray(airportMini * airportMini); CREO QUE NO HACE FALTA!
-
-/*
 * Almacena en un archivo de texto los aeropuertos junto con la cantidad de movimientos de manera descendente.
 */
 int storageByMovs(airportADT ap);

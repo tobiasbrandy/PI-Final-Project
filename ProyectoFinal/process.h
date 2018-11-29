@@ -1,6 +1,7 @@
 #ifndef library_ok
 
 #include <stdio.h>
+#include <time.h>
 #include <math.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -13,9 +14,13 @@
 #define BLOCK 50
 
 typedef struct movementsCDT * movementsADT;
-typedef enum {REGULAR, NOREGULAR, PRIVADOMN, PRIVADOME} flightClassEnum;
-typedef enum {CABOTAJE, INTERNACIONAL, NA} flightClasifEnum;
-typedef enum {DESPEGUE, ATERRIZAJE} moveTypeEnum; 
+typedef enum {SUNDAY=0, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY} weekday;
+typedef enum {REGULAR=0, NOREGULAR, PRIVATE} flightClassEnum;
+typedef enum {CABOTAGE=0, INTERNATIONAL, NA} flightClasifEnum;
+typedef enum {TAKEOFF=0, LANDING} moveTypeEnum; 
+
+typedef flightClasifEnum tClasification[2];
+//typedef tClasification tComposition[3]; No me funciono no se porque. Pero como esta ahora si funciona.
 
 typedef struct airport{
 	char * oaci;
@@ -24,28 +29,13 @@ typedef struct airport{
 	long int movements;
 }tAirport;
 
-typedef struct flightClasification{
-	long int cabotage;
-	long int international;
-}tClasification;
-
-typedef struct composition{
-	tClasification regular;
-	tClasification notRegular;
-	tClasification private;
-}tComposition;
-
 typedef struct date{
 	char day;
 	char month;
 	size_t year;
 }tDate;
 
-/*typedef struct airportMini{ //Para la busqueda binaria. CREO QUE NO HACE FALTA!
-	char * oaci;
-	long int movements;
-}airportMini;
-*/
+weekday dateToWeekday(tDate date);
 
 
 //FUNCIONES QUE FALTAN. Nombres tentativos jajajaj.

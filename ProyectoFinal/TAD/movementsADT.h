@@ -4,13 +4,14 @@
 
 movementsADT createMovements();
 
-int insertMovement(tDate date, flightClassEnum flightClass, moveTypeEnum moveType, char * origOACI, char * destOACI, char * airline);
+int insertMovements(movementsADT mov, tDate date, flightClassEnum class, flightClasifEnum clasification, moveTypeEnum moveType, char * origOACI, char * destOACI, char * airline);
 
-void freeMovements(movementsADT movements);
+void freeMovements(movementsADT mov);
 
-tClasification * getMovsByWeekDay(movementsADT movements);
+tClasification * getMovsByWeekDay(movementsADT mov);
 
-tComposition getMovsComposition(movementsADT movements);
+tClasification * getMovsComposition(movementsADT mov);
 
+void printMovements(movementsADT mv); //testeo
 
 

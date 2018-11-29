@@ -3,7 +3,6 @@
 weekday dateToWeekday(tDate date){
 
 	struct tm time;
-	printf("%lu\n", date.year);
 
 	time.tm_year = date.year - 1900;
    	time.tm_mon = date.month - 1;

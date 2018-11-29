@@ -36,6 +36,7 @@ typedef struct date{
 }tDate;
 
 weekday dateToWeekday(tDate date);
+int binarySearch(void ** array, size_t dim, void * elem, int (*comp)(void*, void*));
 
 
 //FUNCIONES QUE FALTAN. Nombres tentativos jajajaj.

@@ -49,5 +49,16 @@ int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, d
 	freeAirport(aero);
 	freeAirport(aero2);*/
 
+/*
+// creador de archivos ejemplo con movimientos_aeropuerto.csv
+
+FILE * newFile = fopen("movimientos_aeropuerto.csv", "w"); 		// si se abre un archivo con fopen y segundo argumento w, lo crea para escritura
+		char * exampleString;
+
+		fputs (s, newFile); 									// copia el string a newFile (hay que fijarse bien de como poner los \n)
+	
+	if (fclose(newFile) != 0) 									// fclose cierra el stream
+		perror ("An error ocurred while writing\n");
+*/
 
 }

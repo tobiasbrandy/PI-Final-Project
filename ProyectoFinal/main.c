@@ -1,7 +1,7 @@
 #include "TAD/airportADT.h"
 #include "TAD/movementsADT.h"
 
-int main()
+int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, data[1] 1er arg hasta data[numOfFiles] 
 {
 	/*airportADT aero = createAirport();
 	aero = insertAirport(aero, "SAME", "pepelopi", "provincia");

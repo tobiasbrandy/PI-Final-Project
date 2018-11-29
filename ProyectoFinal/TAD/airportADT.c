@@ -1,52 +1,75 @@
 #include "airportADT.h"
 
-typedef struct airportCDT{
+typedef struct airportNode * apNode;
+
+typedef struct airportNode{
 
 	tAirport airport;
-	struct airportCDT * tail;
+	struct airportNode * tail;
+
+}airportNode;
+
+typedef struct airportCDT{
+
+	tAirport ** tAirportArray; //Array que permite la facil busqueda de un airport espcifico.
+	size_t dim;
+	apNode first;
 
 }airportCDT;
 
 airportADT createAirport(){
-	return NULL;
+	return calloc(1, sizeof(airportCDT));
+}
+
+static void freeAirportRec(apNode node){
+	if(node != NULL){
+		freeAirportRec(node->tail);
+		free(node);
+	}
 }
 
 void freeAirport(airportADT ap){
 	if(ap != NULL){
-		freeAirport(ap->tail);
+		freeAirportRec(ap->first);
+		if(ap->tAirportArray != NULL)
+			free(ap->tAirportArray);
 		free(ap);
 	}
 }
 
-airportADT insertAirport(airportADT ap, char * oaci, char * denomination, char * province){
+static apNode insertAirportRec(apNode node, char * oaci, char * denomination, char * province){
 	int c;
-	if(ap == NULL || (c = strcmp(ap->airport.oaci, oaci)) > 0){ //Si no esta en el TAD, lo agrega.
+	if(node == NULL || (c = strcmp(node->airport.oaci, oaci)) > 0){ //Si no esta en el TAD, lo agrega.
 
-		airportADT aux = malloc(sizeof(airportCDT));
+		apNode aux = malloc(sizeof(airportNode));
 		aux->airport.oaci = oaci;
 		aux->airport.denomination = denomination;
 		aux->airport.province = province;
 		aux->airport.movements = 0;
-		aux->tail = ap;
+		aux->tail = node;
 		return aux;
 
 	}
 	if(c == 0){ //Si los oaci coinciden, hace un update.
 
-		ap->airport.denomination = denomination;
-		ap->airport.province = province;
-		return ap;
+		node->airport.denomination = denomination;
+		node->airport.province = province;
+		return node;
 	}
 
-	ap->tail = insertAirport(ap->tail, oaci, denomination, province);
-	return ap;
+	node->tail = insertAirportRec(node->tail, oaci, denomination, province);
+	return node;
 }
 
-tAirport ** airportToArray(airportADT ap, int * dim){
+void insertAirport(airportADT ap, char * oaci, char * denomination, char * province){
+	ap->first = insertAirportRec(ap->first, oaci, denomination, province);
+}
+
+static tAirport ** airportToArray(apNode node, size_t * dim){
 
 	int k = 0;
 	tAirport ** rta = NULL;
-	airportADT aux = ap;
+	apNode aux = node;
 
 	while(aux != NULL){
 		if(k % BLOCK == 0)
@@ -60,22 +83,36 @@ tAirport ** airportToArray(airportADT ap, int * dim){
 	return rta;
 }
 
-static airportADT insertAirportByMovs(airportADT ap, airportADT rta){
-	if(rta == NULL || ap->airport.movements > rta->airport.movements){
+void startFasterAirportSearch(airportADT ap){ 
+	if(ap->tAirportArray != NULL){
+		free(ap->tAirportArray);
+		ap->dim = 0;
+	}
+	ap->tAirportArray = airportToArray(ap->first, &ap->dim);
+}
 
-		airportADT aux = malloc(sizeof(airportCDT));
-		aux->airport.oaci = ap->airport.oaci;
-		aux->airport.denomination = ap->airport.denomination;
-		aux->airport.province = ap->airport.province;
-		aux->airport.movements = ap->airport.movements;
+void stopFasterAirportSearch(airportADT ap){ 
+	free(ap->tAirportArray);
+	ap->tAirportArray = NULL;
+	ap->dim = 0;
+}
+
+static apNode insertAirportByMovs(apNode node, apNode rta){
+	if(rta == NULL || node->airport.movements > rta->airport.movements){
+
+		apNode aux = malloc(sizeof(airportNode));
+		aux->airport.oaci = node->airport.oaci;
+		aux->airport.denomination = node->airport.denomination;
+		aux->airport.province = node->airport.province;
+		aux->airport.movements = node->airport.movements;
 		aux->tail = rta;
 		return aux;
 	}
-	/* El paso inductivo tambien lo hago cuando ap->airport->movements == rta->airport->movements porque ap 
+	/* El paso inductivo tambien lo hago cuando node->airport->movements == rta->airport->movements porque node 
 	ya esta ordenado alfabeticamente por OACI, entonces si cuando son iguales dejo que este primero el de 
-	ap, me estoy garantizando que el orden secundario sea alfabetico.*/
+	node, me estoy garantizando que el orden secundario sea alfabetico.*/
 
-	rta->tail = insertAirportByMovs(ap, rta->tail);
+	rta->tail = insertAirportByMovs(node, rta->tail);
 	return rta;
 }
 
@@ -84,17 +121,38 @@ static airportADT insertAirportByMovs(airportADT ap, airportADT rta){
 * alfabéticamente por código OACI
 */
 static airportADT cpyAirportByMovs(airportADT ap){  //Es static porque nuestro TAD no soporta que la lista este ordenada por movimiento.
-	airportADT rta = NULL;
-	airportADT aux = ap;
+	airportADT rta = createAirport();
+	apNode aux = ap->first;
 	while(aux != NULL){
-		rta = insertAirportByMovs(aux, rta);
+		rta->first = insertAirportByMovs(aux, rta->first);
 		aux=aux->tail;
 	}
 	return rta;
 }
 
+static int comptAirportOACI(tAirport * airport, char * oaci){
+	return strcmp(airport->oaci, oaci);
+}
+
+int addMovementToAirport(airportADT ap, char * oaci){ //Funcion FAS.
+	if(ap->tAirportArray == NULL || ap->dim == 0){
+		printf("There aren't any elements in the ADT or startFasterAirportSearch() wasn't executed\n");
+		printf("Remember to execute startFasterAirportSearch() before using a FAS function if a change to the TAD was made.\n");
+		return -1;
+	}
+
+	int i = binarySearch((void**)ap->tAirportArray, ap->dim, oaci, (int (*)(void*,void*))comptAirportOACI);
+	if(i >= 0){
+		ap->tAirportArray[i]->movements++;
+		return 1;
+	}
+
+	return -1;
+}
+
+
 void printAirport(airportADT ap){ //Funcion de testeo
-	airportADT aux = ap;
+	apNode aux = ap->first;
 	while(aux != NULL){
 		printf("OACI: %s; Deno: %s; Prov: %s; Mov: %ld \n", aux->airport.oaci, aux->airport.denomination, aux->airport.province, aux->airport.movements);
 		aux=aux->tail;
@@ -102,6 +160,12 @@ void printAirport(airportADT ap){ //Funcion de testeo
 	printf("\n");
 }
 
+void printTAirportArray(airportADT ap){
+	for (int i = 0; i < ap->dim; ++i)
+	{
+		printf("%s\n", ap->tAirportArray[i]->oaci);
+	}
+}
 
 
 

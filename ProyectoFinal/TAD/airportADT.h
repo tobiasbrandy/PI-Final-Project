@@ -33,8 +33,6 @@ void printAirport(airportADT ap); //Funcion de testeo.
 
 void printTAirportArray(airportADT ap); //funcion de testeo
 
-airportADT cpyAirportByMovs(airportADT ap);
-
 #endif
 
 

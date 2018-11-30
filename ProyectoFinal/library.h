@@ -43,15 +43,19 @@ weekday dateToWeekday(tDate date);
 
 int binarySearch(void ** array, size_t dim, void * elem, int (*comp)(void*, void*));
 
-void matrixAddition(void ** matrix1, void ** matrix2, int dimF, int dimC, int bytes, void (*add)(void*, void*));
+void matrixAddition(void ** matrix1, void ** matrix2, size_t dimF, size_t dimC, size_t bytes, void (*add)(void*, void*));
 
-void ** createMatrix(int row, int col, int bytes);
+void ** createMatrix(size_t row, size_t col, size_t bytes);
 
-void freeMatrix(void ** matrix, int row);
+void freeMatrix(void ** matrix, size_t row);
 
 void addInts(int * int1, int * int2);
 
 void addBlockMovementsToAirport(movementsADT mv, airportADT ap);
+
+int storeMovsByWeekdayAndClasif(int ** week);
+
+int storeMovsByClasifAndClass(int ** moveComp);
 
 
 //FUNCIONES QUE FALTAN. Nombres tentativos jajajaj.
@@ -59,15 +63,7 @@ void addBlockMovementsToAirport(movementsADT mv, airportADT ap);
 //Funciones Front
 
 //liftAirportADTfromcsv();
-//liftBlockMovementsFromcsv();
-
-
-
-//Funciones Procesamiento
-
-//binarySearchAirportOACI();
-
-
+//liftBlockMovementsFromcsv();size_t
 
 //Funciones de almacenamiento
 

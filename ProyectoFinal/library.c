@@ -15,7 +15,7 @@ weekday dateToWeekday(tDate date){
 
    	int err = mktime(&time);
    	if(err == -1){
-   		printf("ohno\n");
+   		printf("No ah sido posible crear la estructura time\n");
    		return -1;
    	}
 
@@ -49,7 +49,7 @@ int binarySearch(void * array[], size_t dim, void * elem, int (*comp)(void*, voi
 }
 
 
-void ** createMatrix(int row, int col, int bytes){
+void ** createMatrix(size_t row, size_t col, size_t bytes){
 	void ** rta = malloc(row*sizeof(void*));
 	for (int i = 0; i < row; ++i)
 	{
@@ -58,7 +58,7 @@ void ** createMatrix(int row, int col, int bytes){
 	return rta;
 }
 
-void freeMatrix(void ** matrix, int row){
+void freeMatrix(void ** matrix, size_t row){
 	for (int i = 0; i < row; ++i)
 	{
 		free(matrix[i]);
@@ -66,7 +66,7 @@ void freeMatrix(void ** matrix, int row){
 	free(matrix);
 }
 
-void matrixAddition(void ** matrix1, void ** matrix2, int dimF, int dimC, int bytes, void (*add)(void*, void*)){
+void matrixAddition(void ** matrix1, void ** matrix2, size_t dimF, size_t dimC, size_t bytes, void (*add)(void*, void*)){
 	for (int i = 0; i < dimF; ++i)
 	{
 		for (int j = 0; j < dimC; ++j)
@@ -81,6 +81,8 @@ void addInts(int * int1, int * int2){
 }
 
 void addBlockMovementsToAirport(movementsADT mv, airportADT ap){
+	if(mv == NULL || ap == NULL)
+		return;
 
 	char * oaci;
 	size_t dim = getDim(mv);
@@ -92,7 +94,55 @@ void addBlockMovementsToAirport(movementsADT mv, airportADT ap){
 		else
 			oaci = getOrigOACI(mv, i);
 
-		addMovementToAirport(ap, oaci);
+		if(oaci != NULL)
+			addMovementToAirport(ap, oaci);
 	}
+}
+
+int storeMovsByWeekdayAndClasif(int ** week){
+	static char * weekdays[7] = {"Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"};
+
+	FILE * fp;
+
+	fp = fopen ("dia_semana.csv","w");
+	if(fp == NULL){
+		printf("Hubo un error con el creado del archivo dia_semana.csv\n");
+		return -1;
+	}
+
+	fprintf(fp, "Día;Cabotaje;Internacional;Total\n");
+ 
+	for (int i = 0; i < 7; ++i)
+			fprintf(fp, "%s;%d;%d;%d\n", weekdays[i], week[i][CABOTAGE], week[i][INTERNATIONAL], week[i][CABOTAGE]+week[i][INTERNATIONAL]);
+
+	fclose (fp);
+
+	return 1;
+
+}
+
+int storeMovsByClasifAndClass(int ** moveComp){
+		static char * clasif[NOCLASIF] = {"Cabotaje", "Internacional"};
+		static char * class[NOCLASS] = {"Regular", "No Regular", "Vuelo Privado"};
+
+
+	FILE * fp;
+
+	fp = fopen ("composicion.csv","w");
+	if(fp == NULL){
+		printf("Hubo un error con el creado del archivo composicion.csv\n");
+		return -1;
+	}
+
+	fprintf(fp, "Clasificación de Vuelo;Clase de Vuelo;Movimientos\n");
+ 
+	for (int i = 0; i < NOCLASS; ++i)
+		for (int j = 0; j < NOCLASIF; ++j)
+			fprintf(fp, "%s;%s;%d\n", clasif[j], class[i], moveComp[i][j]);
+
+	fclose (fp);
+
+	return 1;
+
 }
 

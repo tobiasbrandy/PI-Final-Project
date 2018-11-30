@@ -62,7 +62,8 @@ static apNode insertAirportRec(apNode node, char * oaci, char * denomination, ch
 }
 
 void insertAirport(airportADT ap, char * oaci, char * denomination, char * province){
-	ap->first = insertAirportRec(ap->first, oaci, denomination, province);
+	if(ap != NULL)
+		ap->first = insertAirportRec(ap->first, oaci, denomination, province);
 }
 
 static tAirport ** airportToArray(apNode node, size_t * dim){
@@ -84,6 +85,9 @@ static tAirport ** airportToArray(apNode node, size_t * dim){
 }
 
 void startFasterAirportSearch(airportADT ap){ 
+	if(ap == NULL)
+		return;
+
 	if(ap->tAirportArray != NULL){
 		free(ap->tAirportArray);
 		ap->dim = 0;
@@ -92,9 +96,12 @@ void startFasterAirportSearch(airportADT ap){
 }
 
 void stopFasterAirportSearch(airportADT ap){ 
-	free(ap->tAirportArray);
-	ap->tAirportArray = NULL;
-	ap->dim = 0;
+	if(ap != NULL){
+		if(ap->tAirportArray != NULL)
+			free(ap->tAirportArray);
+		ap->tAirportArray = NULL;
+		ap->dim = 0;
+	}
 }
 
 static apNode insertAirportByMovs(apNode node, apNode rta){
@@ -121,6 +128,8 @@ static apNode insertAirportByMovs(apNode node, apNode rta){
 * alfabéticamente por código OACI
 */
 static airportADT cpyAirportByMovs(airportADT ap){  //Es static porque nuestro TAD no soporta que la lista este ordenada por movimiento.
+	if(ap == NULL)
+		return NULL;
 	airportADT rta = createAirport();
 	apNode aux = ap->first;
 	while(aux != NULL){
@@ -135,6 +144,9 @@ static int comptAirportOACI(tAirport * airport, char * oaci){
 }
 
 int addMovementToAirport(airportADT ap, char * oaci){ //Funcion FAS.
+	if(ap == NULL || oaci == NULL)
+		return -1;
+
 	if(ap->tAirportArray == NULL || ap->dim == 0){
 		printf("There aren't any elements in the ADT or startFasterAirportSearch() wasn't executed\n");
 		printf("Remember to execute startFasterAirportSearch() before using a FAS function if a change to the TAD was made.\n");
@@ -150,6 +162,32 @@ int addMovementToAirport(airportADT ap, char * oaci){ //Funcion FAS.
 	return -1;
 }
 
+int storeAirportsByMovs(airportADT ap){
+	airportADT ap2 = cpyAirportByMovs(ap);
+
+	FILE * fp;
+
+	fp = fopen ("movimientos_aeropuerto.csv","w");
+	if(fp == NULL){
+		printf("Hubo un error con el creado del archivo movimientos_aeropuerto.csv\n");
+		return -1;
+	}
+
+	fprintf(fp, "OACI;Denominación;Movimientos\n");
+
+	apNode aux = ap2->first;
+ 
+	while(aux != NULL){
+		fprintf (fp, "%s;%s;%ld\n", aux->airport.oaci, aux->airport.denomination, aux->airport.movements);
+		aux = aux->tail;
+	}
+
+	fclose (fp);
+
+	freeAirport(ap2);
+	return 1;
+}
+
 
 void printAirport(airportADT ap){ //Funcion de testeo
 	apNode aux = ap->first;
@@ -160,7 +198,7 @@ void printAirport(airportADT ap){ //Funcion de testeo
 	printf("\n");
 }
 
-void printTAirportArray(airportADT ap){
+void printTAirportArray(airportADT ap){ //Funcion de testeo
 	for (int i = 0; i < ap->dim; ++i)
 	{
 		printf("%s\n", ap->tAirportArray[i]->oaci);

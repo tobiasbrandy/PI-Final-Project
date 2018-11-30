@@ -33,15 +33,17 @@ movementsADT createMovements(){
 }
 
 void freeMovements(movementsADT mov){
-	freeMatrix((void**)mov->week, 7);
-	freeMatrix((void**)mov->moveComp, NOCLASS);
-	free(mov);
+	if(mov != NULL){
+		freeMatrix((void**)mov->week, 7);
+		freeMatrix((void**)mov->moveComp, NOCLASS);
+		free(mov);
+	}
 }
 
 int insertMovements(movementsADT mov, tDate date, flightClassEnum class, flightClasifEnum clasification, moveTypeEnum moveType, char * origOACI, char * destOACI, char * airline){
 
-	if(mov->dim >= MBLOCK)
-		return 0;
+	if(mov == NULL || mov->dim >= MBLOCK)
+		return -1;
 
 	mov->movements[mov->dim].date = date;
 	mov->movements[mov->dim].class = class;
@@ -54,6 +56,8 @@ int insertMovements(movementsADT mov, tDate date, flightClassEnum class, flightC
 
 	if(clasification != NA){
 		weekday c = dateToWeekday(date);
+		if(c == -1)
+			return -1;
 		mov->week[c][clasification]++; //Contabiliza para la query 2
 		mov->moveComp[class][clasification]++; //Contabiliza para la query 3
 	}

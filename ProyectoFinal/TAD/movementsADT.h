@@ -1,6 +1,8 @@
+#ifndef movements_ok
+
+#define movements_ok
+
 #include "../library.h"
-
-
 
 movementsADT createMovements();
 
@@ -8,10 +10,18 @@ int insertMovements(movementsADT mov, tDate date, flightClassEnum class, flightC
 
 void freeMovements(movementsADT mov);
 
-tClasification * getMovsByWeekDay(movementsADT mov);
+int ** getMovsByWeekDay(movementsADT mov);
 
-tClasification * getMovsComposition(movementsADT mov);
+int ** getMovsComposition(movementsADT mov);
+
+moveTypeEnum getMoveType(movementsADT mv, int i);
+
+char * getDestOACI(movementsADT mv, int i);
+
+char * getOrigOACI(movementsADT mv, int i);
+
+size_t getDim(movementsADT mv);
 
 void printMovements(movementsADT mv); //testeo
 
-
+#endif

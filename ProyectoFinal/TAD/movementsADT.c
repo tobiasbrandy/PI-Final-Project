@@ -17,24 +17,24 @@ typedef struct movementsCDT{
 
 	tMovement movements[MBLOCK];
 	size_t dim;
-	tClasification * week;
+	int ** week;
 	//int week[7][2];
-	tClasification * moveComp;
+	int ** moveComp;
 	//int moveComp[3][2];
 
 }movementsCDT;
 
 movementsADT createMovements(){
 	movementsADT mov = malloc(sizeof(movementsCDT));
-	mov->week = calloc(7, sizeof(tClasification));
-	mov->moveComp = calloc(3, sizeof(tClasification));
+	mov->week = (int**)createMatrix(7, NOCLASIF, sizeof(int));
+	mov->moveComp = (int**)createMatrix(NOCLASS, NOCLASIF, sizeof(int));
 	mov->dim = 0;
 	return mov;
 }
 
 void freeMovements(movementsADT mov){
-	free(mov->week);
-	free(mov->moveComp);
+	freeMatrix((void**)mov->week, 7);
+	freeMatrix((void**)mov->moveComp, NOCLASS);
 	free(mov);
 }
 
@@ -61,12 +61,29 @@ int insertMovements(movementsADT mov, tDate date, flightClassEnum class, flightC
 	return 1;
 }
 
-tClasification * getMovsByWeekDay(movementsADT mov){
+int ** getMovsByWeekDay(movementsADT mov){
 	return mov->week;
 }
 
-tClasification * getMovsComposition(movementsADT mov){
+int ** getMovsComposition(movementsADT mov){
 	return mov->moveComp;
+}
+
+moveTypeEnum getMoveType(movementsADT mv, int i){
+	return mv->movements[i].moveType;
+}
+
+char * getDestOACI(movementsADT mv, int i){
+	return mv->movements[i].destOACI;
+}
+
+
+char * getOrigOACI(movementsADT mv, int i){
+	return mv->movements[i].origOACI;
+}
+
+size_t getDim(movementsADT mv){
+	return mv->dim;
 }
 
 void printMovements(movementsADT mv){

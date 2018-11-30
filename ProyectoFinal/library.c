@@ -100,6 +100,11 @@ void addBlockMovementsToAirport(movementsADT mv, airportADT ap){
 }
 
 int storeMovsByWeekdayAndClasif(int ** week){
+	static int repeat;
+	if(repeat != 0)
+		return 1;
+	repeat++;
+
 	static char * weekdays[7] = {"Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"};
 
 	FILE * fp;
@@ -122,9 +127,13 @@ int storeMovsByWeekdayAndClasif(int ** week){
 }
 
 int storeMovsByClasifAndClass(int ** moveComp){
+	static int repeat;
+	if(repeat != 0)
+		return 1;
+	repeat++;
+
 		static char * clasif[NOCLASIF] = {"Cabotaje", "Internacional"};
 		static char * class[NOCLASS] = {"Regular", "No Regular", "Vuelo Privado"};
-
 
 	FILE * fp;
 
@@ -144,5 +153,40 @@ int storeMovsByClasifAndClass(int ** moveComp){
 
 	return 1;
 
+}
+
+void menu(tFunction functions[], size_t dim){
+
+	int c;
+
+	while(c){
+		printf("Menu:\n");
+		printf("Que desea hacer?\n");
+		printf("Recuerde que las funciones de query solo tendran efecto una sola vez\n");
+
+		printf("0 - Terminar programa\n");
+		for (int i = 0; i < dim; ++i)
+		{
+			printf("%d - %s\n", i + 1, functions[i].description);
+		}
+
+		do{
+			c = getint("Ingrese una opcion valida\n");
+		}while(c < 0 || c > dim);
+
+		if(c != 0)
+			functions[c-1].function(functions[c-1].argument);
+	}
+
+}
+
+void menuEspecializado(void * argument1, void * argument2, void * argument3){
+	tFunction function1 = {(int (*)(void*))storeAirportsByMovs, "storeAirportsByMovs", "Realizar query 1, aeropuertos por cantidad de movimientos", argument1};
+	tFunction function2 = {(int (*)(void*))storeMovsByWeekdayAndClasif, "storeMovsByWeekdayAndClasif", "Realizar query 2, movimientos por dia de la semana y clasificacion", argument2};
+	tFunction function3 = {(int (*)(void*))storeMovsByClasifAndClass, "storeMovsByClasifAndClass", "Realizar query 3, movimientos por clase y clasificacion", argument3};
+
+	tFunction functions[] = {function1, function2, function3};
+
+	menu(functions, 3);
 }
 

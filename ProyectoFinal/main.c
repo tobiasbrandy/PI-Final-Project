@@ -25,20 +25,11 @@ int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, d
 	}
 
 
-	//Almacena en el archivo correspondiente la Query 1.
-	storeAirportsByMovs(ap);
-
-	//Almacena en el archivo correspondiente la Query 2.
-	storeMovsByWeekdayAndClasif(week);
-
-	//Almacena en el archivo correspondiente la Query 3.
-	storeMovsByClasifAndClass(moveComp);
+	menuEspecializado(ap, week, moveComp); //Implementacion de menu para efectuar las 3 querys.
 
 	freeAirport(ap);
 	freeMatrix((void**)week, 7);
 	freeMatrix((void**)moveComp, NOCLASS);
-
-
 
 	//FINAL MAIN. YA ESTA!!!!!!
 	*/
@@ -110,21 +101,14 @@ int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, d
 
 	freeMovements(mv);
 
-	printf("Query 1\n");
-	storeAirportsByMovs(ap);
-
-	printf("Query 2\n");
-	storeMovsByWeekdayAndClasif(week);
-
-	printf("Query 3\n");
-	storeMovsByClasifAndClass(moveComp);
+	menuEspecializado(ap, week, moveComp);
 
 
 	freeAirport(ap);
 	freeMatrix((void**)week, 7);
 	freeMatrix((void**)moveComp, NOCLASS);
-*/
-}
+
+}*/
 
 
 /*void stringvToFile (char ** stringv, char * fileName, char * extent) {

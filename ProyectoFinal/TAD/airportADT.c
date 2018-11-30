@@ -163,6 +163,11 @@ int addMovementToAirport(airportADT ap, char * oaci){ //Funcion FAS.
 }
 
 int storeAirportsByMovs(airportADT ap){
+	static int repeat;
+	if(repeat != 0)
+		return 1;
+	repeat++;
+
 	airportADT ap2 = cpyAirportByMovs(ap);
 
 	FILE * fp;

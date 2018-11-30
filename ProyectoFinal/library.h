@@ -36,6 +36,13 @@ typedef struct date{
 	size_t year;
 }tDate;
 
+typedef struct function{
+	int (*function)(void*);
+	char * nombre;
+	char * description;
+	void * argument;
+}tFunction;
+
 
 #include "TAD/movementsADT.h"
 
@@ -56,6 +63,10 @@ void addBlockMovementsToAirport(movementsADT mv, airportADT ap);
 int storeMovsByWeekdayAndClasif(int ** week);
 
 int storeMovsByClasifAndClass(int ** moveComp);
+
+void menu(tFunction functions[], size_t dim);
+
+void menuEspecializado(void * argument1, void * argument2, void * argument3);
 
 
 //FUNCIONES QUE FALTAN. Nombres tentativos jajajaj.

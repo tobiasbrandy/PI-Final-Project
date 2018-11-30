@@ -1,57 +1,44 @@
-#include "TAD/airportADT.h"
-#include "TAD/movementsADT.h"
+#include "library.h"
+
 
 int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, data[1] 1er arg hasta data[numOfFiles] 
 {
-	/*airportADT aero = createAirport();
-	aero = insertAirport(aero, "SAME", "pepelopi", "provincia");
-	aero = insertAirport(aero, "BODS", "2", "a");
-	aero = insertAirport(aero, "FOPS", "3", "s");
-	aero = insertAirport(aero, "SUDF", "4", "g");
-	aero = insertAirport(aero, "UDIS", "6", "h");
-	aero = insertAirport(aero, "AIFO", "5", "j");
-	aero = insertAirport(aero, "AAAA", "7", "k");
-	aero = insertAirport(aero, "PODR", "8", "n");
-	aero = insertAirport(aero, "IDYS", "9", "b");
-	aero = insertAirport(aero, "ZIOS", "11", "v");
-	aero = insertAirport(aero, "ZION", "10", "provincia");
+	/*
+	//INICIO MAIN
 
-	printAirport(aero);
+	airportADT ap = createAirport();
+	movementsADT mv;
+	liftAirport(ap, ...); //Funcion que lee de aeropuertos.csv y hace insert a airportADT de todos los aeropuertos validos. FRONT
+	startFasterAirportSearch(ap); //Creo el array de aeropuertos para buscar mas rapido.
 
-	int dim;
+	int ** week = (int**)createMatrix(7, NOCLASIF, sizeof(int)); //Matriz de 7*2 que guarda la informacion para la query2.
+	int ** moveComp = (int**)createMatrix(NOCLASS, NOCLASIF, sizeof(int)); //Matriz de 3*2 que guarda la informacion para la query 3.
 
-	tAirport ** array = airportToArray(aero, &dim);
+	while(mv = liftnMovements(...)){ //Funcion que lee movimientos.csv y hace insert a movementsADT de n movimientos.FRONT! El while corta cuando ya no hay movimientos en el archivo.
 
-	for (int i = 0; i < dim; ++i)
-	{
-		printf("%s\n", array[i]->oaci);
+		matrixAddition((void**)week, (void**)getMovsByWeekDay(mv), 7, NOCLASIF, sizeof(int), (void (*)(void*, void*))addInts); //Sumo los valores para la query 2 de este bloque.
+		matrixAddition((void**)moveComp, (void**)getMovsComposition(mv), NOCLASS, NOCLASIF, sizeof(int), (void (*)(void*, void*))addInts); //Sumo los valores para el query 3 de este bloque.
+
+		addBlockMovementsToAirport(mv, ap); //Le suma a cada aeropuerto la cantidad de movimientos que tuvo en el bloque.
+
+		freeMovements(mv);
 	}
 
-	array[0]->movements = 7;
-	array[1]->movements = 1;
-	array[2]->movements = 2;
-	array[3]->movements = 3;
-	array[4]->movements = 3;
-	array[5]->movements = 67;
-	array[6]->movements = 78;
-	array[7]->movements = 9;
-	array[8]->movements = 9;
-	array[9]->movements = 74;
+	storeAirportsByMovs(ap); //Almacena en el archivo correspondiente la Query 1.
+	storeMovsByWeekdayAndClasif(week); //Almacena en el archivo correspondiente la Query 2.
+	storeMovsByClasifAndClass(moveComp); //Almacena en el archivo correspondiente la Query 3.
 
-	airportADT aero2 = cpyAirportByMovs(aero);
+	freeAirport(ap);
+	freeMatrix((void**)week, 7);
+	freeMatrix((void**)moveComp, NOCLASS);
 
-	printAirport(aero);
-	printAirport(aero2);
-
-
-	free(array);
-
-	freeAirport(aero);
-	freeAirport(aero2);*/
+	//FINAL MAIN. YA ESTA!!!!!!
+	*/
 
 /*
 	stringvToFile (vectorStrings, movimientos_aeropuestos, .csv) // cada query la va a llamar una vez, permite elegir la extensión del archivo
 */
+
 
 }
 

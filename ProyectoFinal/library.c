@@ -103,7 +103,6 @@ int storeMovsByWeekdayAndClasif(int ** week){
 	static int repeat;
 	if(repeat != 0)
 		return 1;
-	repeat++;
 
 	static char * weekdays[7] = {"Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"};
 
@@ -111,7 +110,7 @@ int storeMovsByWeekdayAndClasif(int ** week){
 
 	fp = fopen ("dia_semana.csv","w");
 	if(fp == NULL){
-		printf("Hubo un error con el creado del archivo dia_semana.csv\n");
+		printf("Hubo un error con el creado del archivo dia_semana.csv. Intentelo nuevamente.\n");
 		return -1;
 	}
 
@@ -122,6 +121,7 @@ int storeMovsByWeekdayAndClasif(int ** week){
 
 	fclose (fp);
 
+	repeat++;
 	return 1;
 
 }
@@ -130,7 +130,6 @@ int storeMovsByClasifAndClass(int ** moveComp){
 	static int repeat;
 	if(repeat != 0)
 		return 1;
-	repeat++;
 
 		static char * clasif[NOCLASIF] = {"Cabotaje", "Internacional"};
 		static char * class[NOCLASS] = {"Regular", "No Regular", "Vuelo Privado"};
@@ -139,7 +138,7 @@ int storeMovsByClasifAndClass(int ** moveComp){
 
 	fp = fopen ("composicion.csv","w");
 	if(fp == NULL){
-		printf("Hubo un error con el creado del archivo composicion.csv\n");
+		printf("Hubo un error con el creado del archivo composicion.csv. Intentelo nuevamente.\n");
 		return -1;
 	}
 
@@ -151,6 +150,7 @@ int storeMovsByClasifAndClass(int ** moveComp){
 
 	fclose (fp);
 
+	repeat++;
 	return 1;
 
 }
@@ -162,7 +162,7 @@ void menu(tFunction functions[], size_t dim){
 	while(c){
 		printf("Menu:\n");
 		printf("Que desea hacer?\n");
-		printf("Recuerde que las funciones de query solo tendran efecto una sola vez\n");
+		printf("Recuerde que las funciones de query, de haber sido exitosas, no se ejecutaran nuevamente\n");
 
 		printf("0 - Terminar programa\n");
 		for (int i = 0; i < dim; ++i)

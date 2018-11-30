@@ -166,7 +166,6 @@ int storeAirportsByMovs(airportADT ap){
 	static int repeat;
 	if(repeat != 0)
 		return 1;
-	repeat++;
 
 	airportADT ap2 = cpyAirportByMovs(ap);
 
@@ -174,7 +173,7 @@ int storeAirportsByMovs(airportADT ap){
 
 	fp = fopen ("movimientos_aeropuerto.csv","w");
 	if(fp == NULL){
-		printf("Hubo un error con el creado del archivo movimientos_aeropuerto.csv\n");
+		printf("Hubo un error con el creado del archivo movimientos_aeropuerto.csv. Intentelo nuevamente.\n");
 		return -1;
 	}
 
@@ -190,6 +189,8 @@ int storeAirportsByMovs(airportADT ap){
 	fclose (fp);
 
 	freeAirport(ap2);
+
+	repeat++;
 	return 1;
 }
 

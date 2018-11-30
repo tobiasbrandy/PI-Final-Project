@@ -120,7 +120,7 @@ static apNode insertAirportByMovs(apNode node, apNode rta){
 * Crea una copia de la lista y la ordena ordenada según la cantidad de movimientos de manera descendente y secundariamente
 * alfabéticamente por código OACI
 */
-/*static*/ airportADT cpyAirportByMovs(airportADT ap){  //Es static porque nuestro TAD no soporta que la lista este ordenada por movimiento.
+static airportADT cpyAirportByMovs(airportADT ap){  //Es static porque nuestro TAD no soporta que la lista este ordenada por movimiento.
 	airportADT rta = createAirport();
 	apNode aux = ap->first;
 	while(aux != NULL){

@@ -42,18 +42,20 @@ int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, d
 
 }
 
-/* void stringvToFile (char ** stringv, char * fileName, char * extent) {
-	char * validExtent;
+/*void stringvToFile (char ** stringv, char * fileName, char * extent) {
+	char * validExtent, aux, validExtent;
 	
 	if (*extent != '.') {
 		validExtent = ".";
-		strcat (validExtent, extension);
+		strcat (validExtent, extent);
 	}
-	else validExtent = extension;
+	else validExtent = extent;
+
+	strcpy(fullName, fileName);
 	
-	strcat (fileName, validExtent);
+	strcat (fullName, validExtent);
 	
-	FILE * newFile = fopen(fileName, "w");
+	FILE * newFile = fopen(fullName, "w");
 
 	while (*stringv != NULL) {
 		fputs (*(stringv++), newFile);
@@ -62,4 +64,4 @@ int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, d
 
 	if (fclose(newfile) != 0)
 		perror ("An error ocurred while writing\n");
-} */
+}*/

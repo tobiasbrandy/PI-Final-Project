@@ -1,6 +1,5 @@
 #include "library.h"
 
-
 weekday dateToWeekday(tDate date){
 
 	struct tm time;
@@ -48,6 +47,7 @@ int binarySearch(void * array[], size_t dim, void * elem, int (*comp)(void*, voi
 	return -1; //No estaba
 }
 
+
 void ** createMatrix(int row, int col, int bytes){
 	void ** rta = malloc(row*sizeof(void*));
 	for (int i = 0; i < row; ++i)
@@ -94,3 +94,4 @@ void addBlockMovementsToAirport(movementsADT mv, airportADT ap){
 		addMovementToAirport(ap, oaci);
 	}
 }
+

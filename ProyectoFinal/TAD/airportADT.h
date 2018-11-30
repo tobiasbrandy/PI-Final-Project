@@ -1,6 +1,10 @@
-#include "../library.h"
+#ifndef airport_ok
+
+#define airport_ok
 
 typedef struct airportCDT * airportADT;
+
+#include "../library.h"
 
 airportADT createAirport();
 
@@ -14,7 +18,7 @@ void freeAirport(airportADT ap);
 /*
 * Almacena en un archivo de texto los aeropuertos junto con la cantidad de movimientos de manera descendente.
 */
-int storageByMovs(airportADT ap);
+int storeAirportsByMovs(airportADT ap);
 
 //Si se modifico el TAD (insercion, remocion, etc), el usuario debe ejecutar esta funcion antes de usar cualquier funcion catalogada FAS (Faster Airport Search).
 void startFasterAirportSearch(airportADT ap);
@@ -28,5 +32,9 @@ int addMovementToAirport(airportADT ap, char * oaci);
 void printAirport(airportADT ap); //Funcion de testeo.
 
 void printTAirportArray(airportADT ap); //funcion de testeo
+
+airportADT cpyAirportByMovs(airportADT ap);
+
+#endif
 
 

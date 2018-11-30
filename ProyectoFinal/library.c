@@ -1,5 +1,6 @@
 #include "library.h"
 
+
 weekday dateToWeekday(tDate date){
 
 	struct tm time;
@@ -46,3 +47,52 @@ int binarySearch(void * array[], size_t dim, void * elem, int (*comp)(void*, voi
 
 	return -1; //No estaba
 }
+
+
+void ** createMatrix(int row, int col, int bytes){
+	void ** rta = malloc(row*sizeof(void*));
+	for (int i = 0; i < row; ++i)
+	{
+		rta[i] = calloc(col, bytes);
+	}
+	return rta;
+}
+
+void freeMatrix(void ** matrix, int row){
+	for (int i = 0; i < row; ++i)
+	{
+		free(matrix[i]);
+	}
+	free(matrix);
+}
+
+void matrixAddition(void ** matrix1, void ** matrix2, int dimF, int dimC, int bytes, void (*add)(void*, void*)){
+	for (int i = 0; i < dimF; ++i)
+	{
+		for (int j = 0; j < dimC; ++j)
+		{
+			add((char*)matrix1[i] + j*bytes, (char*)matrix2[i] + j*bytes);
+		}
+	}
+}
+
+void addInts(int * int1, int * int2){
+	*int1 += *int2;
+}
+
+void addBlockMovementsToAirport(movementsADT mv, airportADT ap){
+
+	char * oaci;
+	size_t dim = getDim(mv);
+
+	for (int i = 0; i < dim; ++i)
+	{
+		if (getMoveType(mv, i) == LANDING)
+			oaci = getDestOACI(mv, i);
+		else
+			oaci = getOrigOACI(mv, i);
+
+		addMovementToAirport(ap, oaci);
+	}
+}
+

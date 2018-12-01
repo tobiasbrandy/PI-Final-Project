@@ -5,12 +5,10 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <time.h>
-#include <math.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 #include "getnum.h"
-#include "random.h"
 #include "TAD/airportADT.h"
 #include "TAD/movementsADT.h"
 

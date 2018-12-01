@@ -16,6 +16,10 @@
 #define BLOCK 50
 #define NOCLASIF 2
 #define NOCLASS 3
+#define SHALLOW 0
+#define DEEP 1
+#define ERROR -1
+#define OK 1
 
 typedef struct movementsCDT * movementsADT;
 typedef enum {SUNDAY=0, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY} weekday;
@@ -67,18 +71,5 @@ int storeMovsByClasifAndClass(int ** moveComp);
 void menu(tFunction functions[], size_t dim);
 
 void menuEspecializado(void * argument1, void * argument2, void * argument3);
-
-
-//FUNCIONES QUE FALTAN. Nombres tentativos jajajaj.
-
-//Funciones Front
-
-//liftAirportADTfromcsv();
-//liftBlockMovementsFromcsv();size_t
-
-//Funciones de almacenamiento
-
-//storeMovementByWeekday(); (Query 2)
-//storeMovementByComposition(); (Query 3)
 
 #endif

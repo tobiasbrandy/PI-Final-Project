@@ -206,7 +206,6 @@ static int liftOneMovement(char * s, movementsADT mv, char * delim, int datePos,
 static int getInfoPositionMovements(char * s, char * delim, int * datePos, int * classPos, int * clasifPos, int * moveTypePos, int * origOACIPos, int * destOACIPos, int * airlinePos){
 	int i = 0;
 	char * t;
-	*clasifPos = 3; //Por ahora
 
 	t = strtok(s, delim);
 
@@ -219,8 +218,8 @@ static int getInfoPositionMovements(char * s, char * delim, int * datePos, int *
 		else if (strcmp(t, "Clase de Vuelo") == 0)
 			*classPos = i;
 
-		/*else if (strcmp (t, "Clasificacion") == 0)
-			*clasifPos = i;*/
+		else if (strcmp (t, "Clasificaci?n Vuelo") == 0)
+			*clasifPos = i;
 
 		else if (strcmp (t, "Tipo de Movimiento") == 0)
 			*moveTypePos = i;
@@ -237,11 +236,10 @@ static int getInfoPositionMovements(char * s, char * delim, int * datePos, int *
 		t = strtok(NULL, delim);
 		i++;
 	}
-		//printf("%d %d %d %d %d %d %d\n", *datePos, *classPos, *clasifPos, *moveTypePos, *origOACIPos, *destOACIPos, *airlinePos);
 
 	if(*datePos == -1 || *classPos == -1 || *clasifPos == -1 || *moveTypePos == -1 || *origOACIPos == -1 || *destOACIPos == -1 || *airlinePos == -1)
-		return -1;
-	return 1;
+		return ERROR;
+	return OK;
 }
 
 
@@ -259,12 +257,12 @@ void liftAirports(airportADT ap, char * fileName) {
 	int oaciPos = -1, denomPos = -1, provinciaPos = -1, ok;
 
 	
-	if(getline(&s, &dim, fp) == -1){
+	if(getline(&s, &dim, fp) == ERROR){
 		printf("No se pudo leer el archivo\n");
 		exit(1);
 	}
 
-	if(getInfoPositionAirport(s, delim, &oaciPos, &denomPos, &provinciaPos) == -1){
+	if(getInfoPositionAirport(s, delim, &oaciPos, &denomPos, &provinciaPos) == ERROR){
 		printf("El archivo ingresado de aeropuertos no es valido.\n");
 		exit(1);
 	}
@@ -275,7 +273,7 @@ void liftAirports(airportADT ap, char * fileName) {
 
 	while (!feof(fp)) { 
 
-		if(getline(&s, &dim, fp) == -1){
+		if(getline(&s, &dim, fp) == ERROR){
 			if(fgetc(fp) == EOF)
 				endReached = 1;
 			else{
@@ -286,7 +284,7 @@ void liftAirports(airportADT ap, char * fileName) {
 
 		if(!endReached){
 			ok = liftOneAirport(ap, s, delim, oaciPos, denomPos, provinciaPos);
-			if(ok == -1){
+			if(ok == ERROR){
 				printf("No se pudo almacenar el aeropuerto, datos ingresados incorrectos\n");
 				exit(1);
 			}
@@ -329,8 +327,8 @@ static int getInfoPositionAirport(char * s, char * delim, int * oaciPos, int * d
 	}
 
 	if(*oaciPos == -1 || *denomPos== -1 || *provincePos == -1)
-		return -1;
-	return 1;
+		return ERROR;
+	return OK;
 }
 
 static int liftOneAirport(airportADT ap, char * s, char * delim, int oaciPos, int denomPos, int provincePos){
@@ -376,6 +374,6 @@ static int liftOneAirport(airportADT ap, char * s, char * delim, int oaciPos, in
 			free(denom);
 		if(province != NULL)
 			free(province);
-		return 1;
+		return OK;
 	}
 }

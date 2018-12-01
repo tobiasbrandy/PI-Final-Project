@@ -68,10 +68,10 @@ static apNode insertAirportRec(apNode node, char * oaci, char * denomination, ch
 
 int insertAirport(airportADT ap, char * oaci, char * denomination, char * province){
 	if(ap == NULL || oaci == NULL || denomination == NULL || province == NULL)
-		return -1;
+		return ERROR;
 
 	ap->first = insertAirportRec(ap->first, oaci, denomination, province);
-	return 1;
+	return OK;
 }
 
 static tAirport ** airportToArray(apNode node, size_t * dim){
@@ -153,13 +153,13 @@ static int comptAirportOACI(tAirport * airport, char * oaci){
 
 int addMovementToAirport(airportADT ap, char * oaci){ //Funcion FAS.
 	if(ap == NULL || oaci == NULL)
-		return -1;
+		return ERROR;
 
 
 	if(ap->tAirportArray == NULL || ap->dim == 0){
 		printf("There aren't any elements in the ADT or startFasterAirportSearch() wasn't executed\n");
 		printf("Remember to execute startFasterAirportSearch() before using a FAS function if a change to the TAD was made.\n");
-		return -1;
+		return ERROR;
 	}
 
 
@@ -168,14 +168,14 @@ int addMovementToAirport(airportADT ap, char * oaci){ //Funcion FAS.
 	if(i >= 0)
 		ap->tAirportArray[i]->movements++;
 
-	return 1;
+	return OK;
 }
 
 int storeAirportsByMovs(airportADT ap){
 	static int repeat;
 
 	if(repeat != 0)
-		return 1;
+		return OK;
 
 	airportADT ap2 = cpyAirportByMovs(ap);
 
@@ -184,7 +184,7 @@ int storeAirportsByMovs(airportADT ap){
 	fp = fopen ("movimientos_aeropuerto.csv","w");
 	if(fp == NULL){
 		printf("Hubo un error con el creado del archivo movimientos_aeropuerto.csv. Intentelo nuevamente.\n");
-		return -1;
+		return ERROR;
 	}
 
 	fprintf(fp, "OACI;Denominación;Movimientos\n");
@@ -201,7 +201,7 @@ int storeAirportsByMovs(airportADT ap){
 	freeAirport(ap2, 0);
 
 	repeat++;
-	return 1;
+	return OK;
 }
 
 
@@ -220,6 +220,3 @@ void printTAirportArray(airportADT ap){ //Funcion de testeo
 		printf("%s\n", ap->tAirportArray[i]->oaci);
 	}
 }
-
-
-

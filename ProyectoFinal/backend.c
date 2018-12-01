@@ -14,9 +14,9 @@ weekday dateToWeekday(tDate date){
    	time.tm_isdst = -1;
 
    	int err = mktime(&time);
-   	if(err == -1){
+   	if(err == ERROR){
    		printf("No ha sido posible crear la estructura time\n");
-   		return -1;
+   		return ERROR;
    	}
 
    	return time.tm_wday;
@@ -95,7 +95,7 @@ void addBlockMovementsToAirport(movementsADT mv, airportADT ap){
 			oaci = getOrigOACI(mv, i);
 
 		if(oaci != NULL)
-			if(addMovementToAirport(ap, oaci) == -1)
+			if(addMovementToAirport(ap, oaci) == ERROR)
 				exit(1);
 	}
 }
@@ -103,7 +103,7 @@ void addBlockMovementsToAirport(movementsADT mv, airportADT ap){
 int storeMovsByWeekdayAndClasif(int ** week){
 	static int repeat;
 	if(repeat != 0)
-		return 1;
+		return OK;
 
 	static char * weekdays[7] = {"Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"};
 
@@ -112,7 +112,7 @@ int storeMovsByWeekdayAndClasif(int ** week){
 	fp = fopen ("dia_semana.csv","w");
 	if(fp == NULL){
 		printf("Hubo un error con el creado del archivo dia_semana.csv. Intentelo nuevamente.\n");
-		return -1;
+		return ERROR;
 	}
 
 	fprintf(fp, "Día;Cabotaje;Internacional;Total\n");
@@ -123,14 +123,14 @@ int storeMovsByWeekdayAndClasif(int ** week){
 	fclose (fp);
 
 	repeat++;
-	return 1;
+	return OK;
 
 }
 
 int storeMovsByClasifAndClass(int ** moveComp){
 	static int repeat;
 	if(repeat != 0){
-		return 1;
+		return OK;
 	}
 
 		static char * clasif[NOCLASIF] = {"Cabotaje", "Internacional"};
@@ -141,7 +141,7 @@ int storeMovsByClasifAndClass(int ** moveComp){
 	fp = fopen ("composicion.csv","w");
 	if(fp == NULL){
 		printf("Hubo un error con el creado del archivo composicion.csv. Intentelo nuevamente.\n");
-		return -1;
+		return ERROR;
 	}
 
 	fprintf(fp, "Clasificación de Vuelo;Clase de Vuelo;Movimientos\n");
@@ -153,7 +153,7 @@ int storeMovsByClasifAndClass(int ** moveComp){
 	fclose (fp);
 
 	repeat++;
-	return 1;
+	return OK;
 
 }
 

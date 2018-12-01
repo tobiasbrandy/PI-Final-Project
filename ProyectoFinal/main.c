@@ -16,6 +16,9 @@ int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, d
 
 	movementsADT mv;
 
+	printf("Cargando...\n");
+	printf("Espere un momento por favor\n");
+
 	while((mv = liftBlockMovements("movimientos.csv")) != NULL){ //Funcion que lee movimientos.csv y hace insert a movementsADT de n movimientos.FRONT! El while corta cuando ya no hay movimientos en el archivo.
 
 		matrixAddition((void**)week, (void**)getMovsByWeekDay(mv), 7, NOCLASIF, sizeof(int), (void (*)(void*, void*))addInts); //Sumo los valores para la query 2 de este bloque.
@@ -25,17 +28,13 @@ int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, d
 
 
 		freeMovements(mv);
-
 	}
-
 
 	menuEspecializado(ap, week, moveComp);
 
-
-	freeAirport(ap, 1);
+	freeAirport(ap, DEEP);
 	freeMatrix((void**)week, 7);
 	freeMatrix((void**)moveComp, NOCLASS);
-
 }
 
 

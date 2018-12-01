@@ -52,7 +52,7 @@ void freeMovements(movementsADT mov){
 int insertMovements(movementsADT mov, tDate date, flightClassEnum class, flightClasifEnum clasification, moveTypeEnum moveType, char * origOACI, char * destOACI, char * airline){
 
 	if(mov == NULL || mov->dim >= MBLOCK)
-		return -1;
+		return ERROR;
 
 	mov->movements[mov->dim].date = date;
 	mov->movements[mov->dim].class = class;
@@ -65,13 +65,13 @@ int insertMovements(movementsADT mov, tDate date, flightClassEnum class, flightC
 
 	if(clasification != NA){
 		weekday c = dateToWeekday(date);
-		if(c == -1)
-			return -1;
+		if(c == ERROR)
+			return ERROR;
 		mov->week[c][clasification]++; //Contabiliza para la query 2
 		mov->moveComp[class][clasification]++; //Contabiliza para la query 3
 	}
 
-	return 1;
+	return OK;
 }
 
 int ** getMovsByWeekDay(movementsADT mov){

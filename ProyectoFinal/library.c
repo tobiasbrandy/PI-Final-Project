@@ -15,7 +15,7 @@ weekday dateToWeekday(tDate date){
 
    	int err = mktime(&time);
    	if(err == -1){
-   		printf("No ah sido posible crear la estructura time\n");
+   		printf("No ha sido posible crear la estructura time\n");
    		return -1;
    	}
 
@@ -128,8 +128,9 @@ int storeMovsByWeekdayAndClasif(int ** week){
 
 int storeMovsByClasifAndClass(int ** moveComp){
 	static int repeat;
-	if(repeat != 0)
+	if(repeat != 0){
 		return 1;
+	}
 
 		static char * clasif[NOCLASIF] = {"Cabotaje", "Internacional"};
 		static char * class[NOCLASS] = {"Regular", "No Regular", "Vuelo Privado"};

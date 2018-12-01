@@ -12,7 +12,7 @@
 #include "random.h"
 #include "TAD/airportADT.h"
 
-#define MBLOCK 150
+#define MBLOCK 10
 #define BLOCK 50
 #define NOCLASIF 2
 #define NOCLASS 3

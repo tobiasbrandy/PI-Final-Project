@@ -36,6 +36,14 @@ void freeMovements(movementsADT mov){
 	if(mov != NULL){
 		freeMatrix((void**)mov->week, 7);
 		freeMatrix((void**)mov->moveComp, NOCLASS);
+		for (int i = 0; i < mov->dim; ++i)
+		{
+			if(mov->movements[i].origOACI != NULL)
+				free(mov->movements[i].origOACI);
+			if(mov->movements[i].destOACI != NULL)
+				free(mov->movements[i].destOACI);
+			free(mov->movements[i].airline);
+		}
 		free(mov);
 	}
 }

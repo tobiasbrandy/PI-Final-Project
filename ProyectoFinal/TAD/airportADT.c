@@ -21,18 +21,21 @@ airportADT createAirport(){
 	return calloc(1, sizeof(airportCDT));
 }
 
-static void freeAirportRec(apNode node){
+static void freeAirportRec(apNode node, int deepFlag){
 	if(node != NULL){
-		free(node->airport.denomination);
-		free(node->airport.province);
-		freeAirportRec(node->tail);
+		if(deepFlag){
+			free(node->airport.oaci);
+			free(node->airport.denomination);
+			free(node->airport.province);
+		}	
+		freeAirportRec(node->tail, deepFlag);
 		free(node);
 	}
 }
 
-void freeAirport(airportADT ap){
+void freeAirport(airportADT ap, int deepFlag){
 	if(ap != NULL){
-		freeAirportRec(ap->first);
+		freeAirportRec(ap->first, deepFlag);
 		if(ap->tAirportArray != NULL)
 			free(ap->tAirportArray);
 		free(ap);
@@ -152,23 +155,25 @@ int addMovementToAirport(airportADT ap, char * oaci){ //Funcion FAS.
 	if(ap == NULL || oaci == NULL)
 		return -1;
 
+
 	if(ap->tAirportArray == NULL || ap->dim == 0){
 		printf("There aren't any elements in the ADT or startFasterAirportSearch() wasn't executed\n");
 		printf("Remember to execute startFasterAirportSearch() before using a FAS function if a change to the TAD was made.\n");
 		return -1;
 	}
 
-	int i = binarySearch((void**)ap->tAirportArray, ap->dim, oaci, (int (*)(void*,void*))comptAirportOACI);
-	if(i >= 0){
-		ap->tAirportArray[i]->movements++;
-		return 1;
-	}
 
-	return -1;
+	int i = binarySearch((void**)ap->tAirportArray, ap->dim, oaci, (int (*)(void*,void*))comptAirportOACI);
+
+	if(i >= 0)
+		ap->tAirportArray[i]->movements++;
+
+	return 1;
 }
 
 int storeAirportsByMovs(airportADT ap){
 	static int repeat;
+
 	if(repeat != 0)
 		return 1;
 
@@ -193,7 +198,7 @@ int storeAirportsByMovs(airportADT ap){
 
 	fclose(fp);
 
-	freeAirport(ap2);
+	freeAirport(ap2, 0);
 
 	repeat++;
 	return 1;

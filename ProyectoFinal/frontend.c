@@ -140,7 +140,7 @@ static int interpretClass( char * class ){
 
 static int isAValidOACI(char * s){
 
-	if(strlen(s) != 4 || (*s == 'S' && *(s+1) == 'A' && isdigit(s+2) && isdigit(s+3))) //Debe tener 4 digitos y no ser SA##.
+	if(strlen(s) != 4 || (*s == 'S' && *(s+1) == 'A' && isdigit(*(s+2)) && isdigit(*(s+3)))) //Debe tener 4 digitos y no ser SA##.
 		return 0;
 	return 1;
 
@@ -178,21 +178,21 @@ static int liftOneMovement(char * s, movementsADT mv, char * delim, int datePos,
 
 		else if(i == origOACIPos){
 			if(isAValidOACI(t)){
-				origOACI = malloc(strlen(t) + 1); //sizeof(char) = 1
+				origOACI = malloc(strlen(t) + 10); //sizeof(char) = 1
 				strcpy(origOACI, t);
 			}
 		}
 
 		else if(i == destOACIPos){
 			if(isAValidOACI(t)){
-				destOACI = malloc(strlen(t) + 1); //sizeof(char) = 1
+				destOACI = malloc(strlen(t) + 10); //sizeof(char) = 1
 				strcpy(destOACI, t);
 			}
 		}
 
 		else if(i == airlinePos){
-			if(!isspace(t)){
-				airline = malloc(strlen(t) + 1);
+			if(!isspace(*t)){
+				airline = malloc(strlen(t) + 10);
 				strcpy(airline, t);
 			}
 		}
@@ -338,7 +338,7 @@ static int liftOneAirport(airportADT ap, char * s, char * delim, int oaciPos, in
 	int i = 0;
 	char * token;
 	int stopReading = 0;
-	char oaci[5];
+	char * oaci;
 	char * denom = NULL;
 	char * province = NULL;
 
@@ -346,9 +346,11 @@ static int liftOneAirport(airportADT ap, char * s, char * delim, int oaciPos, in
 
 	while (token != NULL && stopReading != 1) {
 
-		if (i == oaciPos) {
-			if ((strcmp(token, "") != 0) && !isspace(*token))
+		if(i == oaciPos) {
+			if (!isspace(*token)){
+				oaci = malloc(strlen(token) + 1);
 				strcpy(oaci, token);
+			}
 			else
 				stopReading = 1;
 		}
@@ -368,7 +370,7 @@ static int liftOneAirport(airportADT ap, char * s, char * delim, int oaciPos, in
 	}
 
 	if (stopReading != 1)
-		return insertAirport (ap, oaci, denom, province);
+		return insertAirport(ap, oaci, denom, province);
 	else{
 		if(denom != NULL)
 			free(denom);

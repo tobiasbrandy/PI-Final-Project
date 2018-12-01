@@ -13,7 +13,7 @@ airportADT createAirport();
 */
 int insertAirport(airportADT ap, char * oaci, char * denomination, char * province);
 
-void freeAirport(airportADT ap);
+void freeAirport(airportADT ap, int deepFlag);
 
 /*
 * Almacena en un archivo de texto los aeropuertos junto con la cantidad de movimientos de manera descendente.

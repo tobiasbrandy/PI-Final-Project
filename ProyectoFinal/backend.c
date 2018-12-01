@@ -95,7 +95,8 @@ void addBlockMovementsToAirport(movementsADT mv, airportADT ap){
 			oaci = getOrigOACI(mv, i);
 
 		if(oaci != NULL)
-			addMovementToAirport(ap, oaci);
+			if(addMovementToAirport(ap, oaci) == -1)
+				exit(1);
 	}
 }
 
@@ -158,7 +159,7 @@ int storeMovsByClasifAndClass(int ** moveComp){
 
 void menu(tFunction functions[], size_t dim){
 
-	int c;
+	int c = -1;
 
 	while(c){
 		printf("Menu:\n");

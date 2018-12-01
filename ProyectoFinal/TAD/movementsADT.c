@@ -42,7 +42,8 @@ void freeMovements(movementsADT mov){
 				free(mov->movements[i].origOACI);
 			if(mov->movements[i].destOACI != NULL)
 				free(mov->movements[i].destOACI);
-			free(mov->movements[i].airline);
+			if(mov->movements[i].airline != NULL)
+				free(mov->movements[i].airline);
 		}
 		free(mov);
 	}

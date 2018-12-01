@@ -43,7 +43,9 @@ int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, d
 	//PARA TESTEAR!!
 	airportADT ap = createAirport();
 
-	insertAirport(ap, "SAME", "ezeiza", "lanus");
+	//liftAirports(ap, "hola2.txt");
+
+	/*insertAirport(ap, "SAME", "ezeiza", "lanus");
 	insertAirport(ap, "AMBE", "ezeiza", "lanus");
 	insertAirport(ap, "FOEP", "ezeiza", "lanus");
 	insertAirport(ap, "FISH", "ezeiza", "lanus");
@@ -58,7 +60,7 @@ int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, d
 	insertAirport(ap, "FHDS", "ezeiza", "lanus");
 	insertAirport(ap, "FHGE", "ezeiza", "lanus");
 	insertAirport(ap, "FBYT", "ezeiza", "lanus");
-	insertAirport(ap, "DNYR", "ezeiza", "lanus");
+	insertAirport(ap, "DNYR", "ezeiza", "lanus");*/
 
 	startFasterAirportSearch(ap);
 

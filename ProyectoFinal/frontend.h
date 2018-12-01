@@ -13,15 +13,7 @@
 #include "TAD/movementsADT.h"
 
 movementsADT liftBlockMovements(char * p);
-
-int interpretClasification(char * clasif);
-
-int interpretMove(char * clasif);
-
-tDate interpretDate(char * d);
-
-int interpretClass(char * class);
-
+void liftAirports(airportADT ap, char * fileName);
 
 
 #endif

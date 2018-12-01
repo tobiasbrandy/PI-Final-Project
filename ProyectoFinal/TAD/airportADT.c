@@ -23,6 +23,8 @@ airportADT createAirport(){
 
 static void freeAirportRec(apNode node){
 	if(node != NULL){
+		free(node->airport.denomination);
+		free(node->airport.province);
 		freeAirportRec(node->tail);
 		free(node);
 	}
@@ -61,9 +63,12 @@ static apNode insertAirportRec(apNode node, char * oaci, char * denomination, ch
 	return node;
 }
 
-void insertAirport(airportADT ap, char * oaci, char * denomination, char * province){
-	if(ap != NULL)
-		ap->first = insertAirportRec(ap->first, oaci, denomination, province);
+int insertAirport(airportADT ap, char * oaci, char * denomination, char * province){
+	if(ap == NULL || oaci == NULL || denomination == NULL || province == NULL)
+		return -1;
+
+	ap->first = insertAirportRec(ap->first, oaci, denomination, province);
+	return 1;
 }
 
 static tAirport ** airportToArray(apNode node, size_t * dim){
@@ -186,7 +191,7 @@ int storeAirportsByMovs(airportADT ap){
 		aux = aux->tail;
 	}
 
-	fclose (fp);
+	fclose(fp);
 
 	freeAirport(ap2);
 

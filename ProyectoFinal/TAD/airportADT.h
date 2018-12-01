@@ -11,7 +11,7 @@ airportADT createAirport();
 /*
 * Inserta un nuevo aeropuerto a la lista. Los ordena alfabéticamente según el código OACI.
 */
-void insertAirport(airportADT ap, char * oaci, char * denomination, char * province);
+int insertAirport(airportADT ap, char * oaci, char * denomination, char * province);
 
 void freeAirport(airportADT ap);
 

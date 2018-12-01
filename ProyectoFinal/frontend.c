@@ -1,15 +1,20 @@
 #include "frontend.h"
 
-static int liftOneMovement(char * s, movementsADT mv);
+static int liftOneMovement(char * s, movementsADT mv, char * delim, int datePos, int classPos, int clasifPos, int moveTypePos, int origOACIPos, int destOACIPos, int airlinePos);
+static int getInfoPositionMovements(char * s, char * delim, int * datePos, int * classPos, int * clasifPos, int * moveTypePos, int * origOACIPos, int * destOACIPos, int * airlinePos);
+static int liftOneAirport(airportADT ap, char * s, char * delim, int oaciPos, int denomPos, int provincePos);
+static int getInfoPositionAirport(char * s, char * delim, int * oaciPos, int * denomPos, int * provincePos);
 
+//FUNCIONES PARA MOVEMENT
 movementsADT liftBlockMovements(char * p){
 	static int endReached = 0;
 	static long int filePosition = 0;
+	static int datePos = -1, classPos = -1, clasifPos = -1, origOACIPos = -1, destOACIPos = -1, moveTypePos = -1, airlinePos = -1;
+	static char * delim = ";";
 	int ok; 
 	FILE * movsFile;
 	char * s = NULL; 
 	size_t dim = 0;
-	int endFlag = 0;
 
 	if(endReached)
 		return NULL;
@@ -27,9 +32,11 @@ movementsADT liftBlockMovements(char * p){
 			printf("No se pudo leer el archivo\n"); //Me salteo la primera linea
 			exit(1);
 		}
-		free(s);
-		s = NULL;
-		dim = 0;
+
+		if(getInfoPositionMovements(s, delim, &datePos, &classPos, &clasifPos, &moveTypePos, &origOACIPos, &destOACIPos, &airlinePos) == -1){
+			printf("El archivo ingresado para movimientos es invalido\n");
+			exit(1);
+		}
 	}
 
 	if(fseek(movsFile, filePosition, SEEK_SET)){ //Muevo el puntero a la posicion filePosition
@@ -41,7 +48,7 @@ movementsADT liftBlockMovements(char * p){
 
 		if(getline(&s, &dim, movsFile) == -1){
 			if(fgetc(movsFile) == EOF)
-				endFlag = 1;
+				endReached = 1;
 			else{
 				printf("No se pudo leer el archivo\n");
 				exit(1);
@@ -51,8 +58,8 @@ movementsADT liftBlockMovements(char * p){
 		if(!feof(movsFile))
 			*(s + strlen(s) - 1) = 0; //Borro el /n del final si no es el EOF
 
-		if(!endFlag){
-			ok = liftOneMovement(s, mv);
+		if(!endReached){
+			ok = liftOneMovement(s, mv, delim, datePos, classPos, clasifPos, moveTypePos, origOACIPos, destOACIPos, airlinePos);
 
 			if(ok == -1){
 				printf("Hubo un error en la insercion al movementsADT.\n");
@@ -87,7 +94,7 @@ movementsADT liftBlockMovements(char * p){
 
 }
 
-int interpretClasification(char * clasif){
+static int interpretClasification(char * clasif){
 
 	if( strcmp(clasif, "Cabotaje") == 0){
 		return CABOTAGE; 
@@ -99,7 +106,7 @@ int interpretClasification(char * clasif){
 		return NA; 
 }
 
-int interpretMove(char * clasif){
+static int interpretMove(char * clasif){
 
 	if( strcmp(clasif, "Aterrizaje") == 0)
 		return LANDING; 
@@ -107,7 +114,7 @@ int interpretMove(char * clasif){
 		return TAKEOFF; 
 }
 
-tDate interpretDate( char * d){ // d es "dd/mm/yyyy"
+static tDate interpretDate( char * d){ // d es "dd/mm/yyyy"
 	tDate date; 
 
 	date.day = atoi(d); 
@@ -117,7 +124,7 @@ tDate interpretDate( char * d){ // d es "dd/mm/yyyy"
 	return date; 
 }
 
-int interpretClass( char * class ){
+static int interpretClass( char * class ){
 
 	if( strcmp(class, "Regular") == 0 ){
 		return REGULAR; 
@@ -138,38 +145,235 @@ static int isAValidOACI(char * s){
 	return 1;
 
 }
-static int liftOneMovement(char * s, movementsADT mv){
-	static const char delim[2]= ";";
-	char * strings[3];
+
+static int liftOneMovement(char * s, movementsADT mv, char * delim, int datePos, int classPos, int clasifPos, int moveTypePos, int origOACIPos, int destOACIPos, int airlinePos){
+
+	int i = 0;
 	char * t;
+	tDate date;
+	flightClassEnum class;
+	flightClasifEnum clasification;
+	moveTypeEnum moveType;
+	char * origOACI = NULL;
+	char * destOACI = NULL;
+	char * airline = NULL;
+
 
 	t = strtok(s, delim);
-	tDate date= interpretDate(t);
 
-	strtok(NULL, delim); //Me salteo uno
+	while (t != NULL) {
 
-	t = strtok(NULL, delim); 
-	flightClassEnum class= interpretClass(t); 
-		
-	t = strtok(NULL, delim);
-	flightClasifEnum clasification = interpretClasification(t); 
-		
-	t = strtok(NULL, delim); 
-	moveTypeEnum moveType = interpretMove(t); 
-		
+		if(i == datePos)
+			date = interpretDate(t);
 
-	for (int i = 0; i < 3; ++i)
-	{
-		t = strtok(NULL, delim);
-		//Me fijo que los oacis sean de aeropuertos validos. Si no lo son guardo el valor null.
-		if((i != 0 && i != 1) || isAValidOACI(t)){
+		else if(i == classPos)
+			class = interpretClass(t);
 
-			strings[i] = malloc(strlen(t) + 1); //sizeof(char) = 1
-			strcpy(strings[i], t);
+		else if(i == clasifPos)
+			clasification = interpretClasification(t);
 
-		}else
-			strings[i] = NULL;
+
+		else if(i == moveTypePos)
+			moveType = interpretMove(t);
+
+		else if(i == origOACIPos){
+			if(isAValidOACI(t)){
+				origOACI = malloc(strlen(t) + 1); //sizeof(char) = 1
+				strcpy(origOACI, t);
+			}
+		}
+
+		else if(i == destOACIPos){
+			if(isAValidOACI(t)){
+				destOACI = malloc(strlen(t) + 1); //sizeof(char) = 1
+				strcpy(destOACI, t);
+			}
+		}
+
+		else if(i == airlinePos){
+			if(!isspace(t)){
+				airline = malloc(strlen(t) + 1);
+				strcpy(airline, t);
+			}
+		}
+
+		i++;
+		t = strtok (NULL, delim);
 	}
-	//strings[0] = origOACI, strings[1] = destOACI, strings[2] = airport;
-	return insertMovements(mv, date, class, clasification, moveType, strings[0], strings[1], strings[2]);
+	return insertMovements(mv, date, class, clasification, moveType, origOACI, destOACI, airline);
+}
+
+static int getInfoPositionMovements(char * s, char * delim, int * datePos, int * classPos, int * clasifPos, int * moveTypePos, int * origOACIPos, int * destOACIPos, int * airlinePos){
+	int i = 0;
+	char * t;
+	*clasifPos = 3; //Por ahora
+
+	t = strtok(s, delim);
+
+	while (t != NULL) {
+
+
+		if (strcmp (t, "Fecha") == 0)
+			*datePos = i;
+
+		else if (strcmp(t, "Clase de Vuelo") == 0)
+			*classPos = i;
+
+		/*else if (strcmp (t, "Clasificacion") == 0)
+			*clasifPos = i;*/
+
+		else if (strcmp (t, "Tipo de Movimiento") == 0)
+			*moveTypePos = i;
+
+		else if (strcmp (t, "Origen OACI") == 0)
+			*origOACIPos = i;
+
+		else if (strcmp (t, "Destino OACI") == 0)
+			*destOACIPos = i;
+
+		else if (strcmp (t, "Aerolinea Nombre") == 0)
+			*airlinePos = i;
+
+		t = strtok(NULL, delim);
+		i++;
+	}
+		//printf("%d %d %d %d %d %d %d\n", *datePos, *classPos, *clasifPos, *moveTypePos, *origOACIPos, *destOACIPos, *airlinePos);
+
+	if(*datePos == -1 || *classPos == -1 || *clasifPos == -1 || *moveTypePos == -1 || *origOACIPos == -1 || *destOACIPos == -1 || *airlinePos == -1)
+		return -1;
+	return 1;
+}
+
+
+//FUNCIONES PARA AIRPORT
+void liftAirports(airportADT ap, char * fileName) {
+	FILE * fp;
+	
+	if ((fp = fopen (fileName, "r")) == NULL) {
+		printf ("Error while opening %s", fileName);
+		exit(1);
+	}
+	int endReached = 0;
+	char * delim = ";";
+	char * s = NULL; size_t dim = 0;
+	int oaciPos = -1, denomPos = -1, provinciaPos = -1, ok;
+
+	
+	if(getline(&s, &dim, fp) == -1){
+		printf("No se pudo leer el archivo\n");
+		exit(1);
+	}
+
+	if(getInfoPositionAirport(s, delim, &oaciPos, &denomPos, &provinciaPos) == -1){
+		printf("El archivo ingresado de aeropuertos no es valido.\n");
+		exit(1);
+	}
+
+	free(s);
+	s = NULL;
+	dim = 0;
+
+	while (!feof(fp)) { 
+
+		if(getline(&s, &dim, fp) == -1){
+			if(fgetc(fp) == EOF)
+				endReached = 1;
+			else{
+				printf("No se pudo leer el archivo\n");
+				exit(1);
+			}
+		}
+
+		if(!endReached){
+			ok = liftOneAirport(ap, s, delim, oaciPos, denomPos, provinciaPos);
+			if(ok == -1){
+				printf("No se pudo almacenar el aeropuerto, datos ingresados incorrectos\n");
+				exit(1);
+			}
+		}
+
+		free(s);
+		s = NULL;
+		dim = 0;
+	}
+
+	if(feof(fp)){
+		clearerr(fp);
+		endReached = 1;
+	}
+
+	fclose(fp);
+	return;
+}
+
+static int getInfoPositionAirport(char * s, char * delim, int * oaciPos, int * denomPos, int * provincePos){
+	int i = 0;
+	char * token;
+
+	token = strtok(s, delim);
+
+	while (token != NULL) {
+
+
+		if (strcmp (token, "oaci") == 0)
+			*oaciPos = i;
+
+		else if (strcmp(token, "denominacion") == 0)
+			*denomPos = i;
+
+		else if (strcmp (token, "provincia") == 0)
+			*provincePos = i;
+
+		token = strtok(NULL, delim);
+		i++;
+	}
+
+	if(*oaciPos == -1 || *denomPos== -1 || *provincePos == -1)
+		return -1;
+	return 1;
+}
+
+static int liftOneAirport(airportADT ap, char * s, char * delim, int oaciPos, int denomPos, int provincePos){
+
+	int i = 0;
+	char * token;
+	int stopReading = 0;
+	char oaci[5];
+	char * denom = NULL;
+	char * province = NULL;
+
+	token = strtok(s, delim);
+
+	while (token != NULL && stopReading != 1) {
+
+		if (i == oaciPos) {
+			if ((strcmp(token, "") != 0) && !isspace(*token))
+				strcpy(oaci, token);
+			else
+				stopReading = 1;
+		}
+
+		else if (i == denomPos){
+			denom = malloc(strlen(token) + 1); //sizeof(char) = 1
+			strcpy(denom, token);
+		}
+
+		else if (i == provincePos){
+			province = malloc(strlen(token) + 1);
+			strcpy(province, token);
+		}
+
+		i++;
+		token = strtok (NULL, delim);
+	}
+
+	if (stopReading != 1)
+		return insertAirport (ap, oaci, denom, province);
+	else{
+		if(denom != NULL)
+			free(denom);
+		if(province != NULL)
+			free(province);
+		return 1;
+	}
 }

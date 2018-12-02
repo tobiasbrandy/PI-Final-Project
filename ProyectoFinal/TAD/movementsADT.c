@@ -58,10 +58,28 @@ int insertMovements(movementsADT mov, tDate date, flightClassEnum class, flightC
 	mov->movements[mov->dim].class = class;
 	mov->movements[mov->dim].clasification = clasification;
 	mov->movements[mov->dim].moveType = moveType;
-	mov->movements[mov->dim].origOACI = origOACI;
-	mov->movements[mov->dim].destOACI = destOACI;
-	mov->movements[mov->dim].airline = airline;
+
+	if(origOACI != NULL){
+		mov->movements[mov->dim].origOACI = malloc(strlen(origOACI) + 1);
+		strcpy(mov->movements[mov->dim].origOACI, origOACI);
+	} else
+		mov->movements[mov->dim].origOACI = NULL;
+
+	if(destOACI != NULL){
+		mov->movements[mov->dim].destOACI = malloc(strlen(destOACI) + 1);
+		strcpy(mov->movements[mov->dim].destOACI, destOACI);
+	}
+	else
+		mov->movements[mov->dim].destOACI = NULL;
+	
+	if(airline != NULL){
+		mov->movements[mov->dim].airline = malloc(strlen(airline) + 1);
+		strcpy(mov->movements[mov->dim].airline, airline);
+	} else
+		mov->movements[mov->dim].airline = NULL;
+
 	mov->dim++;
+
 
 	if(clasification != NA){
 		weekday c = dateToWeekday(date);

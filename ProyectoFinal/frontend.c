@@ -29,18 +29,18 @@ movementsADT liftBlockMovements(char * p){
 
 	if(filePosition == 0){
 		if(getline(&s, &dim, movsFile) == -1){
-			printf("No se pudo leer el archivo\n"); //Me salteo la primera linea
+			printf("No se pudo leer el archivo %s\n", p); //Traigo la primera linea
 			exit(1);
 		}
 
 		if(getInfoPositionMovements(s, delim, &datePos, &classPos, &clasifPos, &moveTypePos, &origOACIPos, &destOACIPos, &airlinePos) == -1){
-			printf("El archivo ingresado para movimientos es invalido\n");
+			printf("El archivo ingresado para movimientos es invalido (%s).\n", p);
 			exit(1);
 		}
 	}
 
 	if(fseek(movsFile, filePosition, SEEK_SET)){ //Muevo el puntero a la posicion filePosition
-		printf("Hubo un error recuperando la posicion en el archivo\n");
+		printf("Hubo un error recuperando la posicion en el archivo %s\n", p);
 		exit(1);
 	}
 
@@ -50,7 +50,7 @@ movementsADT liftBlockMovements(char * p){
 			if(fgetc(movsFile) == EOF)
 				endReached = 1;
 			else{
-				printf("No se pudo leer el archivo\n");
+				printf("No se pudo leer el archivo %s\n", p);
 				exit(1);
 			}
 		}
@@ -62,7 +62,7 @@ movementsADT liftBlockMovements(char * p){
 			ok = liftOneMovement(s, mv, delim, datePos, classPos, clasifPos, moveTypePos, origOACIPos, destOACIPos, airlinePos);
 
 			if(ok == -1){
-				printf("Hubo un error en la insercion al movementsADT.\n");
+				printf("Hubo un error en la insercion de un movimiento.\n");
 				exit(1);
 			}
 		}
@@ -72,8 +72,8 @@ movementsADT liftBlockMovements(char * p){
 		dim = 0;
 	}
 
-	if((filePosition = ftell(movsFile)) == -1){ //Guarda la posicion en el archivo
-		printf("Hubo un problema con la obtencion de la posicion en el archivo\n");
+	if((filePosition = ftell(movsFile)) == ERROR){ //Guarda la posicion en el archivo
+		printf("Hubo un problema con la obtencion de la posicion en el archivo %s\n", p);
 		exit(1);
 	}
 
@@ -148,7 +148,7 @@ static int isAValidOACI(char * s){
 
 static int liftOneMovement(char * s, movementsADT mv, char * delim, int datePos, int classPos, int clasifPos, int moveTypePos, int origOACIPos, int destOACIPos, int airlinePos){
 
-	int i = 0;
+	int i = 0, ok;
 	char * t;
 	tDate date;
 	flightClassEnum class;
@@ -178,21 +178,21 @@ static int liftOneMovement(char * s, movementsADT mv, char * delim, int datePos,
 
 		else if(i == origOACIPos){
 			if(isAValidOACI(t)){
-				origOACI = malloc(strlen(t) + 10); //sizeof(char) = 1
+				origOACI = malloc(strlen(t) + 1); //sizeof(char) = 1
 				strcpy(origOACI, t);
 			}
 		}
 
 		else if(i == destOACIPos){
 			if(isAValidOACI(t)){
-				destOACI = malloc(strlen(t) + 10); //sizeof(char) = 1
+				destOACI = malloc(strlen(t) + 1); //sizeof(char) = 1
 				strcpy(destOACI, t);
 			}
 		}
 
 		else if(i == airlinePos){
 			if(!isspace(*t)){
-				airline = malloc(strlen(t) + 10);
+				airline = malloc(strlen(t) + 1);
 				strcpy(airline, t);
 			}
 		}
@@ -200,7 +200,13 @@ static int liftOneMovement(char * s, movementsADT mv, char * delim, int datePos,
 		i++;
 		t = strtok (NULL, delim);
 	}
-	return insertMovements(mv, date, class, clasification, moveType, origOACI, destOACI, airline);
+	ok = insertMovements(mv, date, class, clasification, moveType, origOACI, destOACI, airline);
+
+	free(origOACI);
+	free(destOACI);
+	free(airline);
+
+	return ok;
 }
 
 static int getInfoPositionMovements(char * s, char * delim, int * datePos, int * classPos, int * clasifPos, int * moveTypePos, int * origOACIPos, int * destOACIPos, int * airlinePos){
@@ -258,12 +264,12 @@ void liftAirports(airportADT ap, char * fileName) {
 
 	
 	if(getline(&s, &dim, fp) == ERROR){
-		printf("No se pudo leer el archivo\n");
+		printf("No se pudo leer el archivo %s\n", fileName);
 		exit(1);
 	}
 
 	if(getInfoPositionAirport(s, delim, &oaciPos, &denomPos, &provinciaPos) == ERROR){
-		printf("El archivo ingresado de aeropuertos no es valido.\n");
+		printf("El archivo ingresado de aeropuertos no es valido(%s).\n", fileName);
 		exit(1);
 	}
 
@@ -277,15 +283,18 @@ void liftAirports(airportADT ap, char * fileName) {
 			if(fgetc(fp) == EOF)
 				endReached = 1;
 			else{
-				printf("No se pudo leer el archivo\n");
+				printf("No se pudo leer el archivo %s\n", fileName);
 				exit(1);
 			}
 		}
 
+		if(!feof(fp))
+			*(s + strlen(s) - 1) = 0; //Borro el /n del final si no es el EOF
+
 		if(!endReached){
 			ok = liftOneAirport(ap, s, delim, oaciPos, denomPos, provinciaPos);
 			if(ok == ERROR){
-				printf("No se pudo almacenar el aeropuerto, datos ingresados incorrectos\n");
+				printf("Hubo un error en el almacenamiento de un aeropuerto\n");
 				exit(1);
 			}
 		}
@@ -333,7 +342,7 @@ static int getInfoPositionAirport(char * s, char * delim, int * oaciPos, int * d
 
 static int liftOneAirport(airportADT ap, char * s, char * delim, int oaciPos, int denomPos, int provincePos){
 
-	int i = 0;
+	int i = 0, ok = 1;
 	char * token;
 	int stopReading = 0;
 	char * oaci;
@@ -367,13 +376,56 @@ static int liftOneAirport(airportADT ap, char * s, char * delim, int oaciPos, in
 		token = strtok (NULL, delim);
 	}
 
-	if (stopReading != 1)
-		return insertAirport(ap, oaci, denom, province);
-	else{
-		if(denom != NULL)
-			free(denom);
-		if(province != NULL)
-			free(province);
-		return OK;
+	if (stopReading != 1){
+		ok = insertAirport(ap, oaci, denom, province);
+		free(oaci);
 	}
+
+	if(denom != NULL)
+		free(denom);
+	if(province != NULL)
+		free(province);
+
+	return ok;
+}
+
+void menu(tFunction functions[], size_t dim){
+
+	int c = -1;
+	int ok;
+
+	while(c){
+		printf("Menu:\n");
+		printf("Que desea hacer?\n");
+		printf("Recuerde que las funciones de query, de haber sido exitosas, no se ejecutaran nuevamente\n");
+
+		printf("0 - Terminar programa\n");
+		for (int i = 0; i < dim; ++i)
+		{
+			printf("%d - %s\n", i + 1, functions[i].description);
+		}
+
+		do{
+			c = getint("Ingrese una opcion valida\n");
+		}while(c < 0 || c > dim);
+
+		if(c != 0){
+			ok = functions[c-1].function(functions[c-1].argument);
+			if(ok == OK)
+				printf("La operacion se ha realizado con exito\n\n\n\n");
+			else
+				printf("Hubo un error con la operacion. Por favor intentelo de nuevo.\n");
+		}
+	}
+
+}
+
+void menuEspecializado(void * argument1, void * argument2, void * argument3){
+	tFunction function1 = {(int (*)(void*))storeAirportsByMovs, "storeAirportsByMovs", "Realizar query 1, aeropuertos por cantidad de movimientos", argument1};
+	tFunction function2 = {(int (*)(void*))storeMovsByWeekdayAndClasif, "storeMovsByWeekdayAndClasif", "Realizar query 2, movimientos por dia de la semana y clasificacion", argument2};
+	tFunction function3 = {(int (*)(void*))storeMovsByClasifAndClass, "storeMovsByClasifAndClass", "Realizar query 3, movimientos por clase y clasificacion", argument3};
+
+	tFunction functions[] = {function1, function2, function3};
+
+	menu(functions, 3);
 }

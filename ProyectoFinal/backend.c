@@ -94,9 +94,12 @@ void addBlockMovementsToAirport(movementsADT mv, airportADT ap){
 		else
 			oaci = getOrigOACI(mv, i);
 
-		if(oaci != NULL)
-			if(addMovementToAirport(ap, oaci) == ERROR)
+		if(oaci != NULL){
+			if(addMovementToAirport(ap, oaci) == ERROR){
+				printf("Hubo un problema en la suma de movimientos del aeropuerto %s\n", oaci);
 				exit(1);
+			}
+		}
 	}
 }
 
@@ -155,40 +158,5 @@ int storeMovsByClasifAndClass(int ** moveComp){
 	repeat++;
 	return OK;
 
-}
-
-void menu(tFunction functions[], size_t dim){
-
-	int c = -1;
-
-	while(c){
-		printf("Menu:\n");
-		printf("Que desea hacer?\n");
-		printf("Recuerde que las funciones de query, de haber sido exitosas, no se ejecutaran nuevamente\n");
-
-		printf("0 - Terminar programa\n");
-		for (int i = 0; i < dim; ++i)
-		{
-			printf("%d - %s\n", i + 1, functions[i].description);
-		}
-
-		do{
-			c = getint("Ingrese una opcion valida\n");
-		}while(c < 0 || c > dim);
-
-		if(c != 0)
-			functions[c-1].function(functions[c-1].argument);
-	}
-
-}
-
-void menuEspecializado(void * argument1, void * argument2, void * argument3){
-	tFunction function1 = {(int (*)(void*))storeAirportsByMovs, "storeAirportsByMovs", "Realizar query 1, aeropuertos por cantidad de movimientos", argument1};
-	tFunction function2 = {(int (*)(void*))storeMovsByWeekdayAndClasif, "storeMovsByWeekdayAndClasif", "Realizar query 2, movimientos por dia de la semana y clasificacion", argument2};
-	tFunction function3 = {(int (*)(void*))storeMovsByClasifAndClass, "storeMovsByClasifAndClass", "Realizar query 3, movimientos por clase y clasificacion", argument3};
-
-	tFunction functions[] = {function1, function2, function3};
-
-	menu(functions, 3);
 }
 

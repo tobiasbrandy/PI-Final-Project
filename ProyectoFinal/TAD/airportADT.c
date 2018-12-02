@@ -21,16 +21,21 @@ airportADT createAirport(){
 	return calloc(1, sizeof(airportCDT));
 }
 
-static void freeAirportRec(apNode node){
+static void freeAirportRec(apNode node, int deepFlag){
 	if(node != NULL){
-		freeAirportRec(node->tail);
+		if(deepFlag){
+			free(node->airport.oaci);
+			free(node->airport.denomination);
+			free(node->airport.province);
+		}	
+		freeAirportRec(node->tail, deepFlag);
 		free(node);
 	}
 }
 
-void freeAirport(airportADT ap){
+void freeAirport(airportADT ap, int deepFlag){
 	if(ap != NULL){
-		freeAirportRec(ap->first);
+		freeAirportRec(ap->first, deepFlag);
 		if(ap->tAirportArray != NULL)
 			free(ap->tAirportArray);
 		free(ap);
@@ -61,9 +66,12 @@ static apNode insertAirportRec(apNode node, char * oaci, char * denomination, ch
 	return node;
 }
 
-void insertAirport(airportADT ap, char * oaci, char * denomination, char * province){
-	if(ap != NULL)
-		ap->first = insertAirportRec(ap->first, oaci, denomination, province);
+int insertAirport(airportADT ap, char * oaci, char * denomination, char * province){
+	if(ap == NULL || oaci == NULL || denomination == NULL || province == NULL)
+		return ERROR;
+
+	ap->first = insertAirportRec(ap->first, oaci, denomination, province);
+	return OK;
 }
 
 static tAirport ** airportToArray(apNode node, size_t * dim){
@@ -145,27 +153,29 @@ static int comptAirportOACI(tAirport * airport, char * oaci){
 
 int addMovementToAirport(airportADT ap, char * oaci){ //Funcion FAS.
 	if(ap == NULL || oaci == NULL)
-		return -1;
+		return ERROR;
+
 
 	if(ap->tAirportArray == NULL || ap->dim == 0){
 		printf("There aren't any elements in the ADT or startFasterAirportSearch() wasn't executed\n");
 		printf("Remember to execute startFasterAirportSearch() before using a FAS function if a change to the TAD was made.\n");
-		return -1;
+		return ERROR;
 	}
+
 
 	int i = binarySearch((void**)ap->tAirportArray, ap->dim, oaci, (int (*)(void*,void*))comptAirportOACI);
-	if(i >= 0){
-		ap->tAirportArray[i]->movements++;
-		return 1;
-	}
 
-	return -1;
+	if(i >= 0)
+		ap->tAirportArray[i]->movements++;
+
+	return OK;
 }
 
 int storeAirportsByMovs(airportADT ap){
 	static int repeat;
+
 	if(repeat != 0)
-		return 1;
+		return OK;
 
 	airportADT ap2 = cpyAirportByMovs(ap);
 
@@ -174,7 +184,7 @@ int storeAirportsByMovs(airportADT ap){
 	fp = fopen ("movimientos_aeropuerto.csv","w");
 	if(fp == NULL){
 		printf("Hubo un error con el creado del archivo movimientos_aeropuerto.csv. Intentelo nuevamente.\n");
-		return -1;
+		return ERROR;
 	}
 
 	fprintf(fp, "OACI;Denominación;Movimientos\n");
@@ -186,12 +196,12 @@ int storeAirportsByMovs(airportADT ap){
 		aux = aux->tail;
 	}
 
-	fclose (fp);
+	fclose(fp);
 
-	freeAirport(ap2);
+	freeAirport(ap2, 0);
 
 	repeat++;
-	return 1;
+	return OK;
 }
 
 
@@ -210,6 +220,3 @@ void printTAirportArray(airportADT ap){ //Funcion de testeo
 		printf("%s\n", ap->tAirportArray[i]->oaci);
 	}
 }
-
-
-

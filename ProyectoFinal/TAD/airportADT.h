@@ -4,16 +4,16 @@
 
 typedef struct airportCDT * airportADT;
 
-#include "../library.h"
+#include "../backend.h"
 
 airportADT createAirport();
 
 /*
 * Inserta un nuevo aeropuerto a la lista. Los ordena alfabéticamente según el código OACI.
 */
-void insertAirport(airportADT ap, char * oaci, char * denomination, char * province);
+int insertAirport(airportADT ap, char * oaci, char * denomination, char * province);
 
-void freeAirport(airportADT ap);
+void freeAirport(airportADT ap, int deepFlag);
 
 /*
 * Almacena en un archivo de texto los aeropuertos junto con la cantidad de movimientos de manera descendente.

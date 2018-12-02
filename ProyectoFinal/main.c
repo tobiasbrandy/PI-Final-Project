@@ -1,29 +1,38 @@
-#include "library.h"
+#include "backend.h"
+#include "frontend.h"
 
 
-int main(/* int args, char argv[] */)
+int main(int args, char argv[])
 {
-	/*
-	//INICIO MAIN
+	if (args != 2) {
+		printf("La cantidad de argumentos ingresada es errónea\n");
+		return 1;
+	}
 
 	airportADT ap = createAirport();
+
+	liftAirports(ap, argv[1]);
+
+	startFasterAirportSearch(ap);
+
+	int ** week = (int**)createMatrix(7, NOCLASIF, sizeof(int));
+	int ** moveComp = (int**)createMatrix(NOCLASS, NOCLASIF, sizeof(int));
+
 	movementsADT mv;
-	liftAirport(ap, ...); //Funcion que lee de aeropuertos.csv y hace insert a airportADT de todos los aeropuertos validos. FRONT
-	startFasterAirportSearch(ap); //Creo el array de aeropuertos para buscar mas rapido.
 
-	int ** week = (int**)createMatrix(7, NOCLASIF, sizeof(int)); //Matriz de 7*2 que guarda la informacion para la query2.
-	int ** moveComp = (int**)createMatrix(NOCLASS, NOCLASIF, sizeof(int)); //Matriz de 3*2 que guarda la informacion para la query 3.
+	printf("Cargando...\n");
+	printf("Espere un momento por favor\n");
 
-	while(mv = liftnMovements(...)){ //Funcion que lee movimientos.csv y hace insert a movementsADT de n movimientos.FRONT! El while corta cuando ya no hay movimientos en el archivo.
+	while((mv = liftBlockMovements(argv[2])) != NULL){ //Funcion que lee movimientos.csv y hace insert a movementsADT de n movimientos.FRONT! El while corta cuando ya no hay movimientos en el archivo.
 
 		matrixAddition((void**)week, (void**)getMovsByWeekDay(mv), 7, NOCLASIF, sizeof(int), (void (*)(void*, void*))addInts); //Sumo los valores para la query 2 de este bloque.
 		matrixAddition((void**)moveComp, (void**)getMovsComposition(mv), NOCLASS, NOCLASIF, sizeof(int), (void (*)(void*, void*))addInts); //Sumo los valores para el query 3 de este bloque.
 
 		addBlockMovementsToAirport(mv, ap); //Le suma a cada aeropuerto la cantidad de movimientos que tuvo en el bloque.
 
+
 		freeMovements(mv);
 	}
-
 
 	menuEspecializado(ap, week, moveComp); //Implementacion de menu para efectuar las 3 querys.
 
@@ -32,13 +41,9 @@ int main(/* int args, char argv[] */)
 	freeMatrix((void**)moveComp, NOCLASS);
 
 	return 0;
+}
 
 	//FINAL MAIN. YA ESTA!!!!!!
-	*/
-
-/*
-	stringvToFile (vectorStrings, movimientos_aeropuestos, .csv) // cada query la va a llamar una vez, permite elegir la extensión del archivo
-*/
 
 	//PARA TESTEAR!!
 	/*airportADT ap = createAirport();
@@ -102,12 +107,4 @@ int main(/* int args, char argv[] */)
 	addBlockMovementsToAirport(mv, ap);
 
 	freeMovements(mv);
-
-	menuEspecializado(ap, week, moveComp);
-
-
-	freeAirport(ap);
-	freeMatrix((void**)week, 7);
-	freeMatrix((void**)moveComp, NOCLASS);
-
-}*/
+}

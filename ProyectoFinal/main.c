@@ -1,7 +1,7 @@
 #include "library.h"
 
 
-int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, data[1] 1er arg hasta data[numOfFiles] 
+int main(/* int args, char argv[] */)
 {
 	/*
 	//INICIO MAIN
@@ -30,6 +30,8 @@ int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, d
 	freeAirport(ap);
 	freeMatrix((void**)week, 7);
 	freeMatrix((void**)moveComp, NOCLASS);
+
+	return 0;
 
 	//FINAL MAIN. YA ESTA!!!!!!
 	*/
@@ -108,29 +110,4 @@ int main(/* int numOfFiles, dataType data[] */) // data[0] almacena el nombre, d
 	freeMatrix((void**)week, 7);
 	freeMatrix((void**)moveComp, NOCLASS);
 
-}*/
-
-
-/*void stringvToFile (char ** stringv, char * fileName, char * extent) {
-	char * validExtent, aux, validExtent;
-	
-	if (*extent != '.') {
-		validExtent = ".";
-		strcat (validExtent, extent);
-	}
-	else validExtent = extent;
-
-	strcpy(fullName, fileName);
-	
-	strcat (fullName, validExtent);
-	
-	FILE * newFile = fopen(fullName, "w");
-
-	while (*stringv != NULL) {
-		fputs (*(stringv++), newFile);
-		fputc ('\n', newFile);
-	}
-
-	if (fclose(newfile) != 0)
-		perror ("An error ocurred while writing\n");
 }*/

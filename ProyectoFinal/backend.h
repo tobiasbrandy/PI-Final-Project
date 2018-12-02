@@ -48,7 +48,7 @@ int binarySearch(void ** array, size_t dim, void * elem, int (*comp)(void*, void
 void matrixAddition(void ** matrix1, void ** matrix2, size_t dimF, size_t dimC, size_t bytes, void (*add)(void*, void*));
 
 /*
-*Crea una matriz de row*col. Se le debe brindar el tamaño del tipo  de la matriz. (ej. sizeof(int))
+*Crea una matriz de row*col. Se le debe brindar el tamaño del tipo de la matriz. (ej. sizeof(int))
 */
 void ** createMatrix(size_t row, size_t col, size_t bytes);
 
@@ -63,7 +63,7 @@ void freeMatrix(void ** matrix, size_t row);
 void addInts(int * int1, int * int2);
 
 /*
-*Le suma al airportADT los movimientos del movementsADT. De haber un problema lo informa por salida estandar.
+*Le suma al airportADT los movimientos de cada aeropuerto del movementsADT. De haber un problema lo informa por salida estandar.
 */
 void addBlockMovementsToAirport(movementsADT mv, airportADT ap);
 

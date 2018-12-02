@@ -45,5 +45,4 @@ void menu(tFunction functions[], size_t dim);
 */
 void menuEspecializado(void * argument1, void * argument2, void * argument3);
 
-
 #endif

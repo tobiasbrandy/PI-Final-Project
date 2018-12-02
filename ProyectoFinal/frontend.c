@@ -1,12 +1,66 @@
 #include "frontend.h"
 
+/*
+*Recibe un string con una linea del archivo de movimientos con toda la informacion de un movimiento, un movementsADT, el delimitador de los datos en el string
+*y la posicion donde se encuentra cada dato en el string (cuantos delimitadores hay que pasar para acceder a el).
+*La funcion interpreta todos los datos del string y los transforma en el tipo de dato adecuado y luego hace un insert en el movementsADT que se le paso.
+*Retorna OK o ERROR, segun corresponda.
+*/
 static int liftOneMovement(char * s, movementsADT mv, char * delim, int datePos, int classPos, int clasifPos, int moveTypePos, int origOACIPos, int destOACIPos, int airlinePos);
+
+/*
+*Recibe un string con la primera linea del archivo csv de movimientos que indica nombre y posicion de cada dato y el delimitador que los separa.
+*Devuelve en el correspondiente parametro de salida la posicion (cantidad de delimitadores que hay que pasar para acceder al dato)
+*de cada dato necesario para crear un movementsADT.
+*Retorna OK o ERROR, segun corresponda.
+*/
 static int getInfoPositionMovements(char * s, char * delim, int * datePos, int * classPos, int * clasifPos, int * moveTypePos, int * origOACIPos, int * destOACIPos, int * airlinePos);
+
+/*
+*Recibe un string con una linea del archivo de aeropuertos con toda la informacion de un aeropuerto, un airportADT, el delimitador de los datos en el string
+*y la posicion donde se encuentra cada dato en el string (cuantos delimitadores hay que pasar para acceder a el).
+*La funcion interpreta todos los datos del string y los transforma en el tipo de dato adecuado y luego hace un insert en el airportADT que se le paso.
+*Retorna OK o ERROR, segun corresponda.
+*/
 static int liftOneAirport(airportADT ap, char * s, char * delim, int oaciPos, int denomPos, int provincePos);
+
+/*
+*Recibe un string con la primera linea del archivo csv de aeropuertos que indica nombre y posicion de cada dato y el delimitador que los separa.
+*Devuelve en el correspondiente parametro de salida la posicion (cantidad de delimitadores que hay que pasar para acceder al dato)
+*de cada dato necesario para crear un movementsADT.
+*Retorna OK o ERROR, segun corresponda.
+*/
 static int getInfoPositionAirport(char * s, char * delim, int * oaciPos, int * denomPos, int * provincePos);
+
+/*
+*Recibe un OACI. Devuelve 1 si el OACI puede ser de algun aeropuerto del archivo aeropuertos, es decir,
+*que tenga exactamente 4 caracteres y no sea de la forma SA##. Retorna 0 de lo contrario.
+*/
+static int isAValidOACI(char * s);
+
+/*
+*Transforma un string con el dato de clase de movimiento y lo tranforma a un tipo de dato valido para movementsADT.
+*/
+static int interpretClass(char * class);
+
+/*
+*Transforma un string con el dato de fecha y lo tranforma a un tipo de dato valido para movementsADT.
+*/
+static tDate interpretDate(char * d);
+
+/*
+*Transforma un string con el dato de tipo de movimiento y lo tranforma a un tipo de dato valido para movementsADT.
+*/
+static int interpretType(char * clasif);
+
+/*
+*Transforma un string con el dato de calsificacion y lo tranforma a un tipo de dato valido para movementsADT.
+*/
+static int interpretClasification(char * clasif);
 
 //FUNCIONES PARA MOVEMENT
 movementsADT liftBlockMovements(char * p){
+
 	static int endReached = 0;
 	static long int filePosition = 0;
 	static int datePos = -1, classPos = -1, clasifPos = -1, origOACIPos = -1, destOACIPos = -1, moveTypePos = -1, airlinePos = -1;
@@ -47,7 +101,7 @@ movementsADT liftBlockMovements(char * p){
 	for(int i=0; i < MBLOCK && !feof(movsFile); i++){
 
 		if(getline(&s, &dim, movsFile) == -1){
-			if(fgetc(movsFile) == EOF)
+			if(fgetc(movsFile) == EOF) //Si la ultima linea es vacia, el getline falla. Con esto lo atajo y activo el feof.
 				endReached = 1;
 			else{
 				printf("No se pudo leer el archivo %s\n", p);
@@ -106,9 +160,9 @@ static int interpretClasification(char * clasif){
 		return NA; 
 }
 
-static int interpretMove(char * clasif){
+static int interpretType(char * type){
 
-	if( strcmp(clasif, "Aterrizaje") == 0)
+	if( strcmp(type, "Aterrizaje") == 0)
 		return LANDING; 
 	else
 		return TAKEOFF; 
@@ -136,7 +190,6 @@ static int interpretClass( char * class ){
 		return PRIVATE;
 
 }
-
 
 static int isAValidOACI(char * s){
 
@@ -174,7 +227,7 @@ static int liftOneMovement(char * s, movementsADT mv, char * delim, int datePos,
 
 
 		else if(i == moveTypePos)
-			moveType = interpretMove(t);
+			moveType = interpretType(t);
 
 		else if(i == origOACIPos){
 			if(isAValidOACI(t)){
@@ -280,7 +333,7 @@ void liftAirports(airportADT ap, char * fileName) {
 	while (!feof(fp)) { 
 
 		if(getline(&s, &dim, fp) == ERROR){
-			if(fgetc(fp) == EOF)
+			if(fgetc(fp) == EOF)	//Si la ultima linea es vacia, el getline falla. Con esto lo atajo y activo el feof.
 				endReached = 1;
 			else{
 				printf("No se pudo leer el archivo %s\n", fileName);

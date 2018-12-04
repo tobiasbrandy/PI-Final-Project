@@ -32,18 +32,20 @@ movementsADT createMovements(){
 	return mov;
 }
 
-void freeMovements(movementsADT mov){
+void freeMovements(movementsADT mov, int deepFlag){
 	if(mov != NULL){
 		freeMatrix((void**)mov->week, 7);
 		freeMatrix((void**)mov->moveComp, NOCLASS);
-		for (int i = 0; i < mov->dim; ++i)
-		{
-			if(mov->movements[i].origOACI != NULL)
-				free(mov->movements[i].origOACI);
-			if(mov->movements[i].destOACI != NULL)
-				free(mov->movements[i].destOACI);
-			if(mov->movements[i].airline != NULL)
-				free(mov->movements[i].airline);
+		if(deepFlag){
+			for (int i = 0; i < mov->dim; ++i)
+			{
+				if(mov->movements[i].origOACI != NULL)
+					free(mov->movements[i].origOACI);
+				if(mov->movements[i].destOACI != NULL)
+					free(mov->movements[i].destOACI);
+				if(mov->movements[i].airline != NULL)
+					free(mov->movements[i].airline);
+			}
 		}
 		free(mov);
 	}
@@ -58,26 +60,9 @@ int insertMovements(movementsADT mov, tDate date, flightClassEnum class, flightC
 	mov->movements[mov->dim].class = class;
 	mov->movements[mov->dim].clasification = clasification;
 	mov->movements[mov->dim].moveType = moveType;
-
-	if(origOACI != NULL){
-		mov->movements[mov->dim].origOACI = malloc(strlen(origOACI) + 1);
-		strcpy(mov->movements[mov->dim].origOACI, origOACI);
-	} else
-		mov->movements[mov->dim].origOACI = NULL;
-
-	if(destOACI != NULL){
-		mov->movements[mov->dim].destOACI = malloc(strlen(destOACI) + 1);
-		strcpy(mov->movements[mov->dim].destOACI, destOACI);
-	}
-	else
-		mov->movements[mov->dim].destOACI = NULL;
-	
-	if(airline != NULL){
-		mov->movements[mov->dim].airline = malloc(strlen(airline) + 1);
-		strcpy(mov->movements[mov->dim].airline, airline);
-	} else
-		mov->movements[mov->dim].airline = NULL;
-
+	mov->movements[mov->dim].origOACI = origOACI;
+	mov->movements[mov->dim].destOACI = destOACI;
+	mov->movements[mov->dim].airline = airline;
 	mov->dim++;
 
 

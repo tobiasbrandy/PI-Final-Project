@@ -14,6 +14,8 @@
 #define BLOCK 50
 #define NOCLASIF 2 //Cantidad de clasificaciones
 #define NOCLASS 3 //Cantidad de clases
+#define SHALLOW 0
+#define DEEP 1
 #define ERROR -1
 #define OK 1
 

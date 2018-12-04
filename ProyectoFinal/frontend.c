@@ -137,7 +137,7 @@ movementsADT liftBlockMovements(char * p){
 	}
 
 	if(endReached && getDim(mv) == 0){
-		freeMovements(mv);
+		freeMovements(mv, SHALLOW); //Shallow pues no se guardo ningun string. De todas maneras no cambia pues dim==0.
 		mv = NULL;
 	}
 	
@@ -201,7 +201,7 @@ static int isAValidOACI(char * s){
 
 static int liftOneMovement(char * s, movementsADT mv, char * delim, int datePos, int classPos, int clasifPos, int moveTypePos, int origOACIPos, int destOACIPos, int airlinePos){
 
-	int i = 0, ok;
+	int i = 0;
 	char * t;
 	tDate date;
 	flightClassEnum class;
@@ -253,13 +253,7 @@ static int liftOneMovement(char * s, movementsADT mv, char * delim, int datePos,
 		i++;
 		t = strtok (NULL, delim);
 	}
-	ok = insertMovements(mv, date, class, clasification, moveType, origOACI, destOACI, airline);
-
-	free(origOACI);
-	free(destOACI);
-	free(airline);
-
-	return ok;
+	return insertMovements(mv, date, class, clasification, moveType, origOACI, destOACI, airline);
 }
 
 static int getInfoPositionMovements(char * s, char * delim, int * datePos, int * classPos, int * clasifPos, int * moveTypePos, int * origOACIPos, int * destOACIPos, int * airlinePos){
@@ -395,7 +389,7 @@ static int getInfoPositionAirport(char * s, char * delim, int * oaciPos, int * d
 
 static int liftOneAirport(airportADT ap, char * s, char * delim, int oaciPos, int denomPos, int provincePos){
 
-	int i = 0, ok = 1;
+	int i = 0;
 	char * token;
 	int stopReading = 0;
 	char * oaci;
@@ -429,17 +423,15 @@ static int liftOneAirport(airportADT ap, char * s, char * delim, int oaciPos, in
 		token = strtok (NULL, delim);
 	}
 
-	if (stopReading != 1){
-		ok = insertAirport(ap, oaci, denom, province);
-		free(oaci);
+	if (stopReading != 1)
+		return insertAirport(ap, oaci, denom, province);
+	else{
+		if(denom != NULL)
+			free(denom);
+		if(province != NULL)
+			free(province);
+		return OK;
 	}
-
-	if(denom != NULL)
-		free(denom);
-	if(province != NULL)
-		free(province);
-
-	return ok;
 }
 
 void menu(tFunction functions[], size_t dim){

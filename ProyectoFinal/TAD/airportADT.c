@@ -25,9 +25,10 @@ typedef struct airportCDT{
 }airportCDT;
 
 /*
-*Recibe un puntero a estructura airportNode y la libera.
+*Recibe un puntero a estructura airportNode y la libera. En deepFlag puede ir SHALLOW o DEEP.
+*Indica si se desea liberar los strings dentro de la estructura tAirport.
 */
-static void freeAirportRec(apNode node);
+static void freeAirportRec(apNode node, int deepFlag);
 
 /*
 *Recibe el OACI, la denominacion y provincia de un aeropuerto en forma de string, la cantidad de movimientos y 
@@ -72,19 +73,21 @@ airportADT createAirport(){
 	return calloc(1, sizeof(airportCDT));
 }
 
-static void freeAirportRec(apNode node){
+static void freeAirportRec(apNode node, int deepFlag){
 	if(node != NULL){
-		free(node->airport.oaci);
-		free(node->airport.denomination);
-		free(node->airport.province);
-		freeAirportRec(node->tail);
+		if(deepFlag){
+			free(node->airport.oaci);
+			free(node->airport.denomination);
+			free(node->airport.province);
+		}
+		freeAirportRec(node->tail, deepFlag);
 		free(node);
 	}
 }
 
-void freeAirport(airportADT ap){
+void freeAirport(airportADT ap, int deepFlag){
 	if(ap != NULL){
-		freeAirportRec(ap->first);
+		freeAirportRec(ap->first, deepFlag);
 		if(ap->tAirportArray != NULL)
 			free(ap->tAirportArray);
 		free(ap);
@@ -94,15 +97,9 @@ void freeAirport(airportADT ap){
 static apNode createAirportNode(char * oaci, char * denomination, char * province, long int movements, apNode tail){
 	apNode aux = malloc(sizeof(airportNode));
 
-	aux->airport.oaci = malloc(strlen(oaci) + 1);
-	strcpy(aux->airport.oaci, oaci);
-
-	aux->airport.denomination = malloc(strlen(denomination) + 1);
-	strcpy(aux->airport.denomination, denomination);
-
-	aux->airport.province = malloc(strlen(province) + 1);
-	strcpy(aux->airport.province, province);
-
+	aux->airport.oaci = oaci;
+	aux->airport.denomination = denomination;
+	aux->airport.province = province;
 	aux->airport.movements = movements;
 	aux->tail = tail;
 
@@ -118,11 +115,9 @@ static apNode insertAirportRec(apNode node, char * oaci, char * denomination, ch
 
 	if(c == 0){ //Si los oaci coinciden, hace un update.
 
-		node->airport.denomination = realloc(node->airport.denomination, strlen(denomination) + 1);
-		strcpy(node->airport.denomination, denomination);
+		node->airport.denomination = denomination;
+		node->airport.province = province;
 
-		node->airport.province = realloc(node->airport.province, strlen(province) + 1);
-		strcpy(node->airport.province, province);
 		return node;
 	}
 
@@ -253,7 +248,7 @@ int storeAirportsByMovs(airportADT ap){
 
 	fclose(fp);
 
-	freeAirport(ap2);
+	freeAirport(ap2, SHALLOW); //Shallow porque los strings dentro de tAirport todavia los usa ap.
 
 	repeat++;
 	return OK;

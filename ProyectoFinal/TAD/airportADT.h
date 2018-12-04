@@ -14,15 +14,17 @@ airportADT createAirport();
 /*
 *Inserta un nuevo aeropuerto a airportADT, o modifica la denominacion y provincia de ya existir
 *un aeropuerto con el OACI ingresado.
-*Los ordena alfabéticamente según el código OACI. A todos los strings se les hace un deep copy, asique es seguro liberarlos.
+*Los ordena alfabéticamente según el código OACI. A todos los strings se les hace un shallow copy,
+*por lo que se deben ingresar strings que se encuentren en una zona segura y no tocarlos, pueden ser const.
 *Devuelve OK si todo salio bien, y ERROR si hubo algun problema.
 */
 int insertAirport(airportADT ap, char * oaci, char * denomination, char * province);
 
 /*
-*Libera airportADT.
+*Libera airportADT. En el parametro deepFlag puede ir SHALLOW o DEEP, que indica si tambien se desea liberar
+*los strings dentro de la estructura tAirport. Como los strings ingresados pueden estar en el heap, como no, es necesaria esta opcion.
 */
-void freeAirport(airportADT ap);
+void freeAirport(airportADT ap, int deepFlag);
 
 /*
 *Crea un archivo nuevo movimientos_aeropuerto.csv (si ya existe uno lo borra)

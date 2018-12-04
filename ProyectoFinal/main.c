@@ -15,7 +15,7 @@ int main(int args, char * argv[])
 
 	liftAirports(ap, argv[1]); //Almacena en el airportADT todos los aeropuertos del archivo.
 
-	startFasterAirportSearch(ap); //Habiendo terminado la insercion de aeropuertos en el programa, se ejecuta esta funcion para poder usar funciones FAP.
+	startFasterAirportSearch(ap); //Habiendo terminado la insercion de aeropuertos en el programa, se ejecuta esta funcion para poder usar funciones FAS.
 
 	int ** week = (int**)createMatrix(7, NOCLASIF, sizeof(int)); //En estas dos matrices se almacenara los resultados de las queries 2 y 3 respectivamente.
 	int ** moveComp = (int**)createMatrix(NOCLASS, NOCLASIF, sizeof(int));
@@ -33,12 +33,12 @@ int main(int args, char * argv[])
 		addBlockMovementsToAirport(mv, ap); //Le suma a cada aeropuerto la cantidad de movimientos que tuvo en el MBLOCK.
 
 
-		freeMovements(mv);
+		freeMovements(mv, DEEP);
 	}
 
 	menuEspecializado(ap, week, moveComp); //Implementacion simple de menu para efectuar las 3 queries.
 
-	freeAirport(ap);
+	freeAirport(ap, DEEP);
 	freeMatrix((void**)week, 7);
 	freeMatrix((void**)moveComp, NOCLASS);
 

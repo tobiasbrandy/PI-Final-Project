@@ -10,15 +10,17 @@
 movementsADT createMovements();
 
 /*
-*Inserta un nuevo movimiento al TAD. A todos los strings se les hace un deep copy, asique es seguro liberarlos.
+*Inserta un nuevo movimiento al TAD. A todos los strings se les hace un shallow copy,
+*por lo que se deben ingresar strings que se encuentren en una zona segura y no tocarlos; pueden ser const.
 *Retorna OK o ERROR.
 */
 int insertMovements(movementsADT mov, tDate date, flightClassEnum class, flightClasifEnum clasification, moveTypeEnum moveType, char * origOACI, char * destOACI, char * airline);
 
 /*
-*Libera el TAD.
+*Libera el TAD. En el parametro deepFlag puede ir SHALLOW o DEEP, que indica si tambien se desea liberar
+*los strings dentro del TAD. Como los strings ingresados pueden estar en el heap, como no, es necesaria esta opcion.
 */
-void freeMovements(movementsADT mov);
+void freeMovements(movementsADT mov, int deepFlag);
 
 /*
 *Retorna una matriz de 7*NOCLASIF que almacena la cantidad de movimientos del TAD segun dia de la semana y clasificacion.
